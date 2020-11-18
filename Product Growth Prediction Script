@@ -1,0 +1,88 @@
+import pandas as pd
+
+
+prod_growth_rate = float(input("Enter a production growth rate between -50% - 500%): "))
+if prod_growth_rate < -50 or prod_growth_rate > 500:
+    print("Please enter a valid percentage between -50% - 500%")
+    prod_growth_rate = float(input("Enter a production growth rate between -50% - 500%): "))
+#Enter a sales growth rate between(-50 and 500): y
+sales_growth_rate = float(input("Enter a sales growth rate(-50 and 500): "))
+if sales_growth_rate < -50 or sales_growth_rate > 500:
+    print("Please enter a valid percentage between -50% - 500%")
+    sales_growth_rate = float(input("Enter a sales growth rate(-50 and 500): "))
+#Enter the total years for projection: z
+year_projection = int(input("Number of Years for projection: "))
+if year_projection < 1 or year_projection > 10:
+    print("Please enter a valid number years to project between 1 to 10 years")
+    year_projection = int(input("Number of Years for projection: "))
+
+
+month_num = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul',
+              'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Total']
+
+#establishing values
+dress_price = 99.99
+vari_cost_unit = 56.25
+# Fixed cost divide by 12 to get monthly costs.
+fixed_cost = -52500 / 12
+past_year_prod = 1074
+past_year_sold = 1023
+start_inventory = 217
+
+for year_projection in range(1, year_projection+1):
+    period_year = []
+    produced = []
+    sold = []
+    endinv = []
+    revenue = []
+    tot_cost = []
+    profit = []
+    past_year_prod = past_year_prod + (past_year_prod * (prod_growth_rate/100))
+    past_year_sold = past_year_sold + (past_year_sold * (sales_growth_rate/100))
+    current_inventory = start_inventory
+
+    for i in range(0,len(month_num)):
+        period_year.append(month_num[i])
+        # If in our loop we reach 'Total' we want to add the sums of the columns and break the loop.
+        if month_num[i] == 'Total':
+            produced.append(sum(produced))
+            sold.append(sum(sold))
+            revenue.append(sum(revenue))
+            tot_cost.append(sum(tot_cost))
+            profit.append(sum(profit))
+            endinv.append(current_inventory)
+            start_inventory = current_inventory
+            break
+        # This conditional handles the logic for production in months fed and jul.
+        if month_num[i] == 'Feb' or month_num[i] == 'Jul':
+            produced.append(0)
+        else:
+            produced.append(int(round(past_year_prod/10,0)))
+        # This conditional handles the logic for sales in sep and dec.
+        if month_num[i] == 'Sep' or month_num[i] == 'Dec':
+            sold.append(int(round(past_year_sold * 0.15,0)))
+        else:
+            sold.append(int(round(past_year_sold * 0.07,0)))
+        current_inventory = current_inventory + (produced[i] - sold[i])
+
+        endinv.append(int(round(current_inventory)))
+        revenue.append(int(round(sold[i] * dress_price,0)))
+        tot_cost.append(int(round(fixed_cost - (produced[i] * vari_cost_unit),0)))
+        profit.append(int(round(revenue[i]+tot_cost[i],0)))
+
+    dataframe = pd.DataFrame({
+        'Year {}'.format(year_projection):period_year,
+        'Produced':produced,
+        'Sold':sold,
+        'EndInv':endinv,
+        'Revenue':revenue,
+        'Total Cost':tot_cost,
+        'Profit':profit,
+
+    })
+    print("""
+
+    """)
+    blankIndex=[''] * len(dataframe)
+    dataframe.index=blankIndex
+    print(dataframe)
