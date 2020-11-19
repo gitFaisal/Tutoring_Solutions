@@ -1,0 +1,28 @@
+import mysql.connector
+import json
+
+mydb = mysql.connector.connect(host='localhost', user='root',password='testpassword', database='world_x')
+
+mycursor = mydb.cursor()
+
+mycursor.execute("SELECT * FROM city")
+
+
+for item in mycursor:
+    s = json.loads(item[4])
+    initial_population = s["Population"]
+    population_after_increase = int(round(initial_population * 1.1,0))
+    print('Initial Population: {} After Increase: {}'.format(initial_population, population_after_increase))
+
+
+
+sql = "update city set population = round((info ->> '$.Population') * 1.1,0);"
+
+mycursor.execute(sql)
+
+mydb.commit()
+
+mycursor.close()
+mydb.close()
+
+
