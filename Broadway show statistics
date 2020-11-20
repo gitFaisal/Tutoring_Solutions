@@ -1,0 +1,85 @@
+# Uses broadway.csv file 
+
+import csv
+
+# get our data into broadway variable
+broadway = []
+
+with open('broadway.csv') as csv_file:
+    csv_reader = csv.reader(csv_file, delimiter=',')
+    next(csv_reader)
+    for row in csv_reader:
+        broadway.append(row)
+
+stats = input("""
+Please select an option by entering the corresponding number:
+    1 - Attendance
+    2 - Revenue
+    3 - Performance
+    Enter 0 to exit
+""")
+if int(stats)==0:
+    print("Program closed.")
+    exit()
+
+if int(stats) < 1 or int(stats) > 3:
+    print("Please select a valid option.")
+    stats = input("""
+    Please select an option by entering the corresponding number:
+        1 - Attendance
+        2 - Revenue
+        3 - Performance
+        Enter 0 to exit
+    """)
+
+
+showName = input("Please enter show name: ")
+
+years = input("Please enter year of interest: ")
+if len(years) != 4:
+    print("Please enter a valid year. Example: 2015")
+    years = input("Please enter year of interest: ")
+
+def getShowStats(stats, showName, years):
+    # We store our data relevant to inquery in a sub data set
+    stat_list = []
+    for item in broadway:
+        if showName.lower() in item[4].lower() and item[3] == years:
+            stat_list.append(item)
+    if len(stat_list) == 0:
+        print("No data found.")
+        exit()
+# dictionary to update the totals of months for show
+    months = {
+            '1':0,
+            '2':0,
+            '3':0,
+            '4':0,
+            '5':0,
+            '6':0,
+            '7':0,
+            '8':0,
+            '9':0,
+            '10':0,
+            '11':0,
+            '12':0
+        }
+
+
+    if stats == '1':
+        for item in stat_list:
+            months[item[2]] += int(item[7])
+    if stats == '2':
+        for item in stat_list:
+            months[item[2]] += int(item[9])
+    if stats == '3':
+        for item in stat_list:
+            months[item[2]] += int(item[11])
+    total = sum(months.values())
+    print("Month\tTotal")
+    for month, totals in months.items():
+        print('{}\t{}'.format(month, totals))
+    print("Total\t{}".format(total))
+
+
+getShowStats(stats, showName, years)
