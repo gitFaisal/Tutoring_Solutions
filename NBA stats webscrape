@@ -1,0 +1,30 @@
+from requests import get
+from bs4 import BeautifulSoup
+import pandas as pd
+
+
+years_for_url = ['2011','2012','2013','2014','2015','2016','2017','2018','2019','2020']
+
+averages = []
+for i in years_for_url:
+    url = "https://www.teamrankings.com/nba/stat/personal-fouls-per-game?date={}-06-16".format(i) 
+    response = get(url) 
+    soup = BeautifulSoup(response.text, 'lxml')
+
+    row_data = soup.findAll('tr')
+
+    pf = []
+    for row in row_data[1:]:
+        pf.append(float(row.find_all('td')[2].text))
+    avg = round(sum(pf) / len(pf),2)
+    averages.append(avg)
+    
+    
+actual_years = ['2010','2011','2012','2013','2014','2015','2016','2017','2018','2019']
+    
+seasonal_averages = pd.DataFrame({
+    "years":actual_years,
+    "season_fouls": averages,
+})
+
+seasonal_averages
