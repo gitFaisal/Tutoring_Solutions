@@ -1,0 +1,102 @@
+
+
+print("Programming", "Essentials", "in", sep='***', end='...')
+print("Python")
+# ---------------------------
+print("    *           " *2 *2)
+print("   *  * \t"*2 *2)
+print("  *    * \t"*2 * 2)
+print(" *      * \t"*2 * 2)
+print("***    *** \t"*2 * 2)
+print("  *    * \t"*2 * 2)
+print("  *    * \t"*2 * 2)
+
+
+# -----------------------------
+
+print("\"I'm\"\n\"\"learning\"\"\n\"\"\"python\"\"\"")
+
+
+# --------------------------------
+
+John = 3
+Mary = 5
+Adam = 6
+
+print(John, ",", Mary, "," ,Adam)
+
+totalApples = John + Mary + Adam
+
+print(totalApples)
+
+# Experimenting with above code
+mary_minus_john = Mary - John
+print(mary_minus_john)
+# ---------------------------------------
+miles_to_kilometers = miles * 1.60934
+kilometers_to_miles = kilometers / 1.60934
+
+# -------------------------------------------
+x = 20
+x = float(x)
+print(x)
+y = (3 * x**3) - (2 * x**2) + 3 * x - 1
+
+print("y=",y)
+# -----------------------------------------------
+
+a = 3
+seconds = 3600
+
+print("Hours: ", a)
+print("seconds in Hours: ", a * seconds)
+
+
+print("Goodbye")
+# ***LAST THREE***
+# --------------------------------
+x = float(10)
+y = float(20)
+
+add_xy = x + y
+subtract_yx = y - x
+multiply_xy = x * y
+divide_yx = y / x
+
+
+print(add_xy)
+print(subtract_yx)
+print(multiply_xy)
+print(divide_yx)
+
+print("\nThat's all, folks!")
+
+# ----------------------------------
+
+x = float(input("Enter value for x: "))
+
+y = 1 / (x + 1/ (x +1 / (x +(1/x))))
+
+
+print("y = ", y)
+
+---------------------------------------
+# Let me know if this one needs explaining
+def endTime(hour, mins, dura):
+    mins_total = mins + dura
+
+    if mins_total < 60:
+        return ("{}:{}".format(hour, mins_total))
+    else:
+        hour_to_add = mins_total // 60
+        mins_left_over = mins_total % 60
+        hour += hour_to_add
+        if hour > 24:
+            trimmed_hour = hour % 24
+            return("{}:{}".format(trimmed_hour, mins_left_over))
+        return("{}:{}".format(hour, mins_left_over))
+
+
+
+print(endTime(12, 17, 59))
+print(endTime(23, 58, 642))
