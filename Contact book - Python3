@@ -1,0 +1,55 @@
+
+class Person:
+    def __init__(self, first_name, last_name, phone_number, email):
+        self.first_name = first_name
+        self.last_name = last_name
+        self.phone_number = phone_number
+        self.email = email
+
+    def full_name(self):
+        return f"{self.first_name} {self.last_name}"
+
+    def __str__(self):
+        return f"Name: {self.first_name} {self.last_name}\nPhone Number: {self.phone_number} \nEmail: {self.email}"
+
+contacts = list()
+
+print("Welcome to the My Contacts Book")
+
+user_input = ""
+
+while user_input != "q":
+    print("Options:")
+    print("1 - Enter new conact")
+    print("2 - Display all contacts")
+    print("3 - Search by first name")
+    print("q - Quit program")
+    user_input = input("Select option: ")
+
+    if user_input == "1":
+        print("Enter contact information")
+
+        first_name = input("First Name: ")
+        last_name = input("Last Name: ")
+        phone_number = input("Phone Number: ")
+        email = input("email: ")
+
+        my_contact = Person(first_name, last_name, phone_number, email)
+        contacts.append(my_contact)
+
+        print("Your contacts have been updated")
+
+    elif user_input == "2":
+        for contact in contacts:
+            print(contact)
+        input("Press any key to continue...")
+
+    elif user_input == "3":
+        search = input("Enter contact's name\n")
+        for contact in contacts:
+            if search in contact[0]:
+                print(contact)
+    elif user_input.lower() == "q":
+        break
+
+print("Thanks for using My Contacts Book!")
