@@ -1,0 +1,36 @@
+import random
+from Capitals import states
+
+capital = {}
+all_states = []
+
+for state in states:
+    capital[state['name']] = state['capital']
+    all_states.append(state['name'])
+
+random.shuffle(states)
+
+user_input= ""
+
+while user_input != "q":
+    correct = 0
+    incorrect = 0
+    for state in all_states:
+        user_input = input("What is the capital of {}: ".format(state))
+        if user_input.upper() == capital[state].upper():
+            print("You got it right!")
+            correct += 1
+            print("Correct: {}  Incorrect: {}".format(correct, incorrect))
+        else:
+            print("You got that wrong, as I expected...")
+            incorrect += 1
+            print("Correct: {}  Incorrect: {}".format(correct, incorrect))
+
+    if correct + incorrect == 50:
+        print("Your final score is {}".format(correct))
+        user_input = input("Would you like to play again? Y / N ").upper()
+        if user_input == 'Y':
+            correct = 0
+            incorrect = 0
+        elif user_input == 'N':
+            user_input = "q"
