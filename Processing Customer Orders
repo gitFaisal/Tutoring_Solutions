@@ -1,0 +1,126 @@
+import csv
+
+# Reading the csv file to create our list of complete data, and dictionaries
+# for key-values we are going to need later.
+
+customer_list = []
+customer_balance = {}
+customer_names = {}
+
+with open('customers.csv') as csv_file:
+    csv_reader = csv.reader(csv_file, delimiter=',')
+
+    for row in csv_reader:
+        customer_names[row[0]] = row[1]
+        customer_balance[row[0]] = row[2]
+        customer_list.append(row)
+
+########################################
+
+# Create list with only our customer numbers, to check if customer exists later.
+
+customer_number_record = []
+for i in customer_list:
+    customer_number_record.append(i[0])
+
+##########################################
+
+# Same as we did with customers.csv
+
+inventory_list = []
+item_prices = {}
+item_description = {}
+with open('inventory.csv') as csv_file:
+    csv_reader = csv.reader(csv_file, delimiter=',')
+
+    for row in csv_reader:
+        item_description[row[0]] = row[1]
+        item_prices[row[0]] = row[2]
+        inventory_list.append(row)
+
+##########################################
+
+tot_customers = []
+
+with open("orders.txt", "r") as a_file:
+  customer = []
+  for line in a_file:
+    stripped_line = line.strip()
+
+    if stripped_line[:2] == "CO":
+        customer.append(stripped_line)
+        orders_counter = 0
+        num_of_orders = int(stripped_line[7:10])
+    else:
+        customer.append(stripped_line)
+        orders_counter +=1
+
+        if orders_counter == num_of_orders:
+            tot_customers.append(customer)
+            customer = []
+            orders_counter = 0
+# Got rid of EOF
+tot_customers.pop()
+
+#######################################
+
+for customer in tot_customers:
+    customer_num = customer[0][2:7]
+    order_date = customer[0][11:19]
+    date_string = "{}/{}/{}".format(order_date[0:2],order_date[2:4],order_date[4:8])
+    invoice_type = customer[0][10]
+
+    if customer_num in customer_number_record:
+
+        if invoice_type == "S":
+            total_ordered = 0
+            balance = float(customer_balance[customer_num])
+
+            for i in customer[1:]:
+                order = i.split("^")
+                quantity = float(order[0])
+                item_price = float(item_prices[order[1]].replace('T',""))
+
+                total_ordered += (item_price * quantity)
+
+                date = order[2]
+            total_due = total_ordered + balance
+            customer_balance[customer_num] = total_due
+            print("Customer Name:",customer_names[customer_num])
+            print("Date: {}\n".format(date_string))
+            print("Total ordered:\t {}".format(int(total_ordered)))
+            print("Balance:\t {}".format(int(balance)))
+            print("Total Due:\t {}\n".format(int(total_due)))
+            print("---------------\n")
+        else:
+            total_ordered = 0
+            balance = float(customer_balance[customer_num])
+            print("Order Date:{:>15}".format(date_string))
+            print("   Customer:{:>15}{:>30}\n".format(customer_num, customer_names[customer_num]))
+            print("{:^3}   {:<18}{:<28}{:^10}{:>11}{:>11}{:>14}".format("Ln#","Item #", "Item Description", "Req Date", "Qty","Price", "Total"))
+
+            for i in customer[1:]:
+                line = customer.index(i)
+                order = i.split("^")
+                quantity = float(order[0])
+                quantity_int = int(quantity)
+                item_price = float(item_prices[order[1]])
+                items_total = quantity * item_price
+                date = order[2]
+                req_date = "{}/{}/{}".format(date[0:2],date[2:4],date[4:8])
+
+                total_ordered += (item_price * quantity)
+
+                print("{:^3d}   {:<18}{:<28}{:^10}{:>11d}{:>11.2f}   ${:>10.2f}".format(line, order[1], item_description[order[1]], req_date, quantity_int, item_price, items_total))
+
+
+            total_due = total_ordered + balance
+            print("\n{:>80}{:>18.2f}".format("Total Ordered:", total_ordered))
+            print("{:>80}{:>18.2f}".format("Balance:", balance))
+            print("\n{:>80}{:>18.2f}\n".format("Total Due:", total_due))
+            print("---------------\n")
+
+
+    else:
+        print("Customer {} is invalid\n".format(customer_num))
+        print("---------------\n")
