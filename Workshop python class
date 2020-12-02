@@ -1,0 +1,113 @@
+
+
+class Member:
+    def __init__(self, full_name):
+        self.full_name = full_name
+    def introduce(self):
+        return("Hi my name is " + self.full_name + "!")
+
+
+
+
+class Student(Member):
+    def __init__(self, full_name, reason):
+        super().__init__(full_name)
+        self.full_name = full_name
+        self.reason = reason
+
+    def get_name(self):
+        return self.full_name
+
+    def get_reason(self):
+        return self.reason
+
+    def get_type(self):
+        return("student")
+
+
+#
+class Instructor(Member):
+    def __init__(self, full_name, bio):
+        super().__init__(full_name)
+        self.bio = bio
+        self.skills = []
+
+    def get_bio(self):
+        return "{}".format(self.bio)
+
+    def add_skill(self, skill):
+        self.skills.append(skill)
+        return self.skills
+
+    def get_name(self):
+        return self.full_name
+
+    def get_skill(self):
+        return self.skills
+
+    def get_type(self):
+        return("instructor")
+
+
+st1 = Student("jaky", "needs to learn the code@!")
+st2 = Student("harry", "CAN WE CODE?")
+
+inst1 = Instructor("harold", "I have 99 years of code at 40X the speed of learning")
+inst1.add_skill("all languages")
+
+inst2 = Instructor("Drew", "I have google on my side")
+inst2.add_skill("Python")
+inst2.add_skill("JavaScript")
+
+
+#
+print(st1.get_reason())
+class Workshop():
+    def __init__(self, date, subject):
+        self.date = date
+        self.subject = subject
+        self.instructors = []
+        self.students = []
+
+    def add_participant(self, person):
+        if person.get_type() == "student":
+            student = {}
+
+            student['name'] = person.get_name()
+            student['reason'] = person.get_reason()
+
+            self.students.append(student)
+
+        elif person.get_type() == "instructor":
+            instructor = {}
+
+            instructor['name'] = person.get_name()
+            instructor['bio'] = person.get_bio()
+            instructor['skills'] = person.get_skill()
+
+            self.instructors.append(instructor)
+
+    def get_instructors(self):
+        return self.instructors
+
+    def print_details(self):
+        print(" Workshop - {} - {} \n".format(self.date, self.subject))
+        print("Students")
+
+        for i in range(0, len(self.students)):
+            print("{}. {} - {}".format(i+1, self.students[i]['name'], self.students[i]['reason']))
+
+        print("\nInstructors")
+        for i in range(0, len(self.instructors)):
+            print("""{}. {} - {}
+        {}
+
+             """.format(i+1, self.instructors[i]['name'], self.instructors[i]['skills'] , self.instructors[i]['bio']))
+
+workshop = Workshop("12/03/2014", "Shutl")
+workshop.add_participant(st1)
+workshop.add_participant(st2)
+workshop.add_participant(inst1)
+workshop.add_participant(inst2)
+
+print(workshop.print_details())
