@@ -1,0 +1,46 @@
+Solution: 
+var cellPhone = {
+  phoneNumber: '1234567890',
+  model: "Samsung Galaxy Note",
+  contacts: [],
+  addContact: function (contactName, number) {
+    var contactInfo = new Object()
+    contactInfo.name = contactName
+    contactInfo.phoneNumber = number 
+    this.contacts.push(contactInfo)
+    console.log(`${contactName} Sucessfully added.`)
+  },
+  numberOfContacts: function () {
+    console.log(this.contacts.length)
+  },
+  lookUp: function (name) {
+    for (let i=0; i < this.contacts.length; i++) {
+      if (this.contacts[i].name == name) {
+        console.log("Exists")
+      } else {
+        console.log("Contact not found.")
+      }
+      }
+    },
+  deleteContact: function (name) {
+    for (let i=0; i < this.contacts.length; i++) {
+      if (this.contacts[i].name == name) {
+        this.contacts.splice(i,1)
+        console.log(`${name} successfully deleted.`)
+      } else {
+        console.log("Contact not found.")
+      }
+    }
+  }
+  
+ 
+}
+cellPhone.addContact("Walter","7186668788")
+cellPhone.addContact("Junior","3477668898")
+cellPhone.addContact("Clayton","9176668788")
+cellPhone.addContact("Harris","4129876786")
+
+console.log(cellPhone.contacts)
+cellPhone.deleteContact("Walter")
+
+console.log(cellPhone.contacts)
