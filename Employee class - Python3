@@ -1,0 +1,104 @@
+class Employee:
+# we add a class variable to count the number of employees
+  employee_number = 1
+  def __init__(self, ename):
+    # Set enumber to equal class varialble emp\
+    self.ename = ename
+    self.enumber = Employee.employee_number
+    # Increment employee_number everytime a new class object is created.
+    Employee.employee_number += 1
+
+  def get_employeeName(self):
+    return self.ename
+
+  def get_employeeNumber(self):
+    return self.enumber
+
+  def set_employeeName(self, newName):
+    self.ename = newName
+    return self.ename
+
+  def set_employeeNumber(self, newNumber):
+    self.enumber = newNumber
+    return self.enumber
+
+  def __str__(self):
+    return self.ename
+
+
+
+
+# ProductionWorker class inherits from Employee class.
+
+class ProductionWorker(Employee):
+  def __init__(self, ename, shift, payRate):
+    #  Used super() to initialize parent class Employee inside child class ProductionWorker.
+    super().__init__(ename)
+    self.shift = shift
+    self.payRate = payRate
+
+  def get_shift(self):
+    return self.shift
+
+  def get_payRate(self):
+    return self.payRate
+
+  def set_shift(self, shift):
+    self.shift = shift
+    return self.shift
+
+  def set_payRate(self, rate):
+    self.payRate = rate
+    return self.payRate
+
+  def __str__(self):
+# Created shift variable to convert input back into day or night.
+    shift = ""
+    if self.shift == 1:
+        shift = "Day"
+    else:
+        shift = "Night"
+# Used triple quotes to print on multiple lines. Used format() to fill place holders with correct values.
+    return """
+Employee Name: {}
+Employee Number:{}
+Shift: {}
+Hourly payrate: ${}
+
+    """.format(self.ename, self.enumber, shift, self.payRate)
+
+
+
+
+
+# Main code (to check your class implementation)
+
+ename = input("Enter name of Employee:")
+employee_shift = (input("Enter your shift (Day/Night):"))
+employee_payRate = int(input("Enter hourly pay rate:"))
+
+if(employee_shift.lower() == "day"):
+    pw1 = ProductionWorker(ename,1,employee_payRate)
+elif(employee_shift.lower() == "night"):
+    pw1 = ProductionWorker(ename,2,employee_payRate)
+else:
+    print("Enter correct shift, day or night")
+
+print("\n")
+print(pw1)
+print("\n")
+
+ename = input("Enter name of Employee:")
+employee_shift = (input("Enter your shift (Day/Night):"))
+employee_payRate = int(input("Enter hourly pay rate:"))
+
+if(employee_shift.lower() == "day"):
+    pw2 = ProductionWorker(ename,1,employee_payRate)
+elif(employee_shift.lower() == "night"):
+    pw2 = ProductionWorker(ename,2,employee_payRate)
+else:
+    print("Enter correct shift, day or night")
+
+print("\n")
+print(pw2)
+print("\n")
