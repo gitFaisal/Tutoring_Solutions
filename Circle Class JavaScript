@@ -1,0 +1,26 @@
+class Circle {
+  constructor(radius, color) {
+    this.radius = radius;
+    this.color = color;
+    this.drawCircle = function() {
+      return `Drawing a ${this.color} cirlce.`
+    },
+    this.getCircumference = function() {
+      let diameter = this.radius * 2
+      let pie = 3.141592653
+      return diameter * pie
+    },
+    this.getArea = function() {
+      let radiusSquared = this.radius ** 2
+      let pie = 3.141592653
+      return radiusSquared * pie 
+    },
+    this.changeColor = function(color){
+      this.color = color
+      return this.color
+    }
+  }
+}
+
+const cir = new Circle(4, "red");
+console.log(cir.changeColor("purple"))
