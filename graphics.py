@@ -1,79 +1,53 @@
 from graphics import *
 import time
 
+snowman_stars = [
+           Circle(Point(250,390), 100),
+           Circle(Point(250, 275), 75),
+           Circle(Point(250, 200), 50),
+           Oval(Point(240, 210), Point(260, 215)),
+           Circle(Point(230, 190), 5),
+           Circle(Point(270, 190), 5),
+           Circle(Point(250, 270), 5),
+           Circle(Point(250, 295), 5),
+           Circle(Point(250, 320), 5),
+           Line(Point(320,260), Point(400, 220)),
+           Line(Point(180,260), Point(100, 220)),
+           Circle(Point(50,75), 4),
+           Circle(Point(150,150), 4),
+           Circle(Point(475,350), 4),
+           Circle(Point(390,420), 4),
+           Circle(Point(250,125), 4),
+           Circle(Point(225,30), 4)
+           ]
+snowman_stars_colors = [
+           color_rgb(240, 242, 245),
+           color_rgb(240, 242, 245),
+           color_rgb(240, 242, 245),
+           'red',
+           'blue',
+           'blue',
+           'black',
+           'black',
+           'black',
+           'brown',
+           'brown',
+           'white',
+           'yellow',
+           'purple',
+           'blue',
+           'orange',
+           'gray'
+
+           ]
 def main():
     win = GraphWin("Snowman drifting in space", 500, 500)
     win.setBackground(color_rgb( 0, 0, 0))
-# legs
-    cir = Circle(Point(250,390), 100)
-    cir.setFill(color_rgb(240, 242, 245))
-    cir.draw(win)
-# body
-    cir2 = Circle(Point(250, 275), 75)
-    cir2.setFill(color_rgb(240, 242, 245))
-    cir2.draw(win)
-# head
-    cir3 = Circle(Point(250, 200), 50)
-    cir3.setFill(color_rgb(240, 242, 245))
-    cir3.draw(win)
-# mouth
-    mouth = Oval(Point(240, 210), Point(260, 215))
-    mouth.setFill('red')
-    mouth.draw(win)
-# eye1
-    eye1 = Circle(Point(230, 190), 5)
-    eye1.setFill('blue')
-    eye1.draw(win)
-# eye2
-    eye1 = Circle(Point(270, 190), 5)
-    eye1.setFill('blue')
-    eye1.draw(win)
-# buttons1
-    btn1 = Circle(Point(250, 270), 5)
-    btn1.setFill('black')
-    btn1.draw(win)
-# button2
-    btn2 = Circle(Point(250, 295), 5)
-    btn2.setFill('black')
-    btn2.draw(win)
-# button3
-    btn3 = Circle(Point(250, 320), 5)
-    btn3.setFill('black')
-    btn3.draw(win)
-# left arm
-    arm1 = Line(Point(320,260), Point(400, 220))
-    arm1.setFill("brown")
-    arm1.draw(win)
-
-# right arm
-    arm2 = Line(Point(180,260), Point(100, 220))
-    arm2.setFill("brown")
-    arm2.draw(win)
-
-# star 1
-    star1 = Circle(Point(50,75), 4)
-    star1.setFill("white")
-    star1.draw(win)
-# star 2
-    star2 = Circle(Point(150,150), 4)
-    star2.setFill("yellow")
-    star2.draw(win)
-# star 3
-    star3 = Circle(Point(475,350), 4)
-    star3.setFill("purple")
-    star3.draw(win)
-# star 4
-    star4 = Circle(Point(390,420), 4)
-    star4.setFill("blue")
-    star4.draw(win)
-# star 5
-    star5 = Circle(Point(250,125), 4)
-    star5.setFill("orange")
-    star5.draw(win)
-# star 6
-    star6 = Circle(Point(225,30), 4)
-    star6.setFill("gray")
-    star6.draw(win)
+    
+    for i in range(0,17):
+        obj = snowman_stars[i]
+        obj.setFill(snowman_stars_colors[i])
+        obj.draw(win)
 
 # sun size
     sunSize = 50
