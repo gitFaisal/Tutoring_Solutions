@@ -1,0 +1,68 @@
+import streamlit as st
+import pandas as pd
+import matplotlib.pyplot as plt
+
+
+st.title("Uber Lyft Rideshare data")
+
+
+
+def load_data():
+    data = pd.read_csv('rideshare.csv')
+    return data
+
+df = load_data()
+
+
+
+temp_dict = {}
+
+for i in df.temperature:
+    if i not in temp_dict.keys():
+        temp_dict[i] = 1
+    else:
+        temp_dict[i] += 1
+
+x = temp_dict.keys()
+y = temp_dict.values()
+
+def scatter(x,y):
+    plt.scatter(x,y, alpha=0.5)
+    plt.xlabel("Temperature")
+    plt.ylabel("Number of rides")
+    plt.title("Rides at specific temperature")
+
+    return plt
+
+
+st.pyplot(scatter(x, y))
+
+
+
+uber_rides = df[df.cab_type.eq('Uber')]
+lyft_rides = df[df.cab_type.eq('Lyft')]
+
+
+uber = uber_rides.hour.value_counts().sort_index()
+lyft = lyft_rides.hour.value_counts().sort_index()
+
+hours = df.hour.unique()
+hours.sort()
+
+# x = hours
+# y = uber
+# z = lyft
+def uber_lyft_rides(x,y,z):
+    plt.figure(figsize=(12,4))
+    plt.plot(x,y,color='r', label='Uber rides')
+    plt.plot(x,z,color='b', label='Lyft rides')
+    plt.title("Uber vs Lyft rides throughout day", fontsize=20)
+    plt.legend(fontsize=10, loc='upper right')
+    plt.grid(True)
+    plt.xlabel("Time of Day", fontsize=15)
+    plt.ylabel("Number of Rides", fontsize=15)
+
+    return plt
+
+
+st.pyplot(uber_lyft_rides(hours, uber, lyft))
