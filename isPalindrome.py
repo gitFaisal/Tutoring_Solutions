@@ -12,8 +12,6 @@ def isPalindrome(s):
     Returns True if s is Palindrome or False otherwise"""
 
 
-
-
 # main code
 string1 = 'Able was I, ere I saw Elba'
 if(isPalindrome(string1)):
