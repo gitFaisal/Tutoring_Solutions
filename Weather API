@@ -1,0 +1,62 @@
+
+import requests
+import json
+import time
+
+api_key = '55592219da64379c5a1872dccb250590'
+
+base_url = 'http://api.openweathermap.org/data/2.5/weather?q='
+
+# base_url = "http://api.openweathermap.org/data/2.5/forecast?q="
+
+city_name = input("Please enter a city name: ")
+zip_code = input("Please enter zip code: ")
+
+print("Processing...")
+time.sleep(.5)
+
+complete_url = base_url + city_name + ','+ zip_code + "&appid=" + api_key
+# complete_url = base_url + city_name + "," + zip_code + "&appid=" + api_key
+
+quit = False
+
+while quit != True:
+
+  try:
+    response = requests.get(complete_url)
+    
+  except:
+    print("Please enter valid city and zip code.")
+    city_name = input("Please enter a city name: ")
+    zip_code = input("Please enter zip code: ")
+
+
+  w_data = response.json() 
+
+
+  description = w_data['weather'][0]['description']
+  humidity = w_data['main']['humidity']
+  wind = w_data['wind']['speed']
+  temp_min = w_data['main']['temp_min']
+  temp_max = w_data['main']['temp_max']
+
+  min_f = (temp_min - 273.15) * (9/5) + 32
+  max_f = (temp_max - 273.15) * (9/5) + 32
+
+  print("Today's Forecast for {}".format(city_name))
+  time.sleep(0.5)
+  print("Clouds:\t{}".format(description))
+  print("Humidity:\t{}".format(humidity))
+  print("Wind Speed:\t{}mph".format(wind))
+  print("Temp Low:\t{}".format(min_f))
+  print("Temp High:\t{}".format(max_f))
+
+  user_input = input("Would you like to try again? (Y|N)")
+  if user_input.upper() == 'Y':
+    city_name = input("Please enter a city name: ")
+    zip_code = input("Please enter zip code: ")
+  elif user_input.upper() == 'N':
+    print("See you next time!")
+    time.sleep(0.5)
+    print("Programming stopped")
+    break
