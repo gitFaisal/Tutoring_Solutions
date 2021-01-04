@@ -1,62 +1,124 @@
 
+
 import requests
 import json
 import time
 
-api_key = '55592219da64379c5a1872dccb250590'
+print("Program starting...")
+time.sleep(0.5)
 
-base_url = 'http://api.openweathermap.org/data/2.5/weather?q='
+print("""
+****WELCOME TO THE WEATHER PROGRAM***
+""")
 
-# base_url = "http://api.openweathermap.org/data/2.5/forecast?q="
+time.sleep(0.5)
 
-city_name = input("Please enter a city name: ")
-zip_code = input("Please enter zip code: ")
-
-print("Processing...")
-time.sleep(.5)
-
-complete_url = base_url + city_name + ','+ zip_code + "&appid=" + api_key
-# complete_url = base_url + city_name + "," + zip_code + "&appid=" + api_key
-
-quit = False
-
-while quit != True:
-
-  try:
-    response = requests.get(complete_url)
+def weather_data(base_url, api_key):
     
-  except:
-    print("Please enter valid city and zip code.")
-    city_name = input("Please enter a city name: ")
-    zip_code = input("Please enter zip code: ")
+    city_name = input("Enter city name: ")
+
+    if city_name.replace(" ", "").isalpha() == False:
+      print("Please enter valid city name: ")
+      time.sleep(0.5)
+      print("Please try again, with letters only.")
+      city_name = input("Enter city name: ")
+
+    zip_code = input("Enter zip code (Leave blank to skip): ")
+
+    if zip_code.isdigit() == False:
+      print("Please enter a valid zip code.")
+      time.sleep(0.5)
+      print("Please try again, with numbers only.")
+      zip_code = input("Enter zip code (Leave blank to skip): ")
+    elif len(zip_code) != 5:
+      print("Please enter exactly 5 digits for zip code.")
+      time.sleep(0.5)
+      zip_code = input("Enter zip code (Leave blank to skip): ")
+    
+    quit = False
+
+    while quit == False:
+
+      try:
+        complete_url = base_url + city_name + ','+ zip_code + "&appid=" + api_key
+
+        response = requests.get(complete_url)
+
+        w_data = response.json()
+
+        description = w_data['weather'][0]['description']
+        humidity = w_data['main']['humidity']
+        wind = w_data['wind']['speed']
+        temp = (w_data['main']['temp'] - 273.15) * (9/5) + 32
+        temp_min = (w_data['main']['temp_min'] - 273.15) * (9/5) + 32
+        temp_max = (w_data['main']['temp_max'] - 273.15) * (9/5) + 32
+        feels_like = (w_data['main']['feels_like'] - 273.15) * (9/5) + 32
+
+        print("\n")
+        print("Loading your weather data...\n")
+
+        time.sleep(.75)
+
+        print("---------------------------")
+        print("Today's Forecast for {}".format(city_name))
+        print("---------------------------\n")
+        print("Day:\t\t{}".format(description))
+        print("Temp now:\t{}".format(round(temp,1)))
+        print("Humidity:\t{}".format(humidity))
+        print("Temp low:\t{}".format(round(temp_min,1)))
+        print("Temp high:\t{}".format(round(temp_max,1)))
+        print("Wind:\t\t{}mph".format(wind))
+        print("Feels like:\t{}".format(round(feels_like,1)))
+
+      except KeyError:
+        print('Sorry. The weather data was not found for the info you entered.')
+
+      except Exception:
+        print('Sorry. Something went wrong.')
+
+      user_input = input("Would you like to try again? (Y|N) ")
+
+      if user_input.upper() == 'Y':
+        city_name = input("Enter city: ")
+
+        if city_name.replace(" ", "").isalpha() == False:
+          print("Please enter valid city name: ")
+          time.sleep(0.5)
+          print("Please try again, with letters only.")
+          city_name = input("Enter city name: ")
+
+        zip_code = input("Enter zip code: ")
+
+        if zip_code.isdigit() == False:
+          print("Please enter a valid zip code.")
+          time.sleep(0.5)
+          print("Please try again, with numbers only.")
+          zip_code = input("Enter zip code (Leave blank to skip): ")
+        elif len(zip_code) != 5:
+          print("Please enter exactly 5 digits for zip code.")
+          time.sleep(0.5)
+          zip_code = input("Enter zip code (Leave blank to skip): ")
+          
+      elif user_input.upper() == 'N':
+        print("Program exiting...")
+        time.sleep(.75)
+        print("See you next time!")
+        quit = True
+      else:
+        print("Invalid input")
+        city_name = input("Enter city: ")
+        zip_code = input("Enter zip code: ")
 
 
-  w_data = response.json() 
+
+def main():
+    api_key = '55592219da64379c5a1872dccb250590'
+    base_url = 'http://api.openweathermap.org/data/2.5/weather?q='
+
+    weather_data(base_url, api_key)
 
 
-  description = w_data['weather'][0]['description']
-  humidity = w_data['main']['humidity']
-  wind = w_data['wind']['speed']
-  temp_min = w_data['main']['temp_min']
-  temp_max = w_data['main']['temp_max']
 
-  min_f = (temp_min - 273.15) * (9/5) + 32
-  max_f = (temp_max - 273.15) * (9/5) + 32
+if __name__ == "__main__":
+    main()
 
-  print("Today's Forecast for {}".format(city_name))
-  time.sleep(0.5)
-  print("Clouds:\t{}".format(description))
-  print("Humidity:\t{}".format(humidity))
-  print("Wind Speed:\t{}mph".format(wind))
-  print("Temp Low:\t{}".format(min_f))
-  print("Temp High:\t{}".format(max_f))
-
-  user_input = input("Would you like to try again? (Y|N)")
-  if user_input.upper() == 'Y':
-    city_name = input("Please enter a city name: ")
-    zip_code = input("Please enter zip code: ")
-  elif user_input.upper() == 'N':
-    print("See you next time!")
-    time.sleep(0.5)
-    print("Programming stopped")
-    break
