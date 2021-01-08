@@ -1,0 +1,147 @@
+
+import time
+     
+def print_greeting():
+  print("""
+This program classifies positive integers as Odd/Even,
+Prime/Composite, Perfect/Abundant/Deficient, 
+Square, and Triangular.
+
+You will now get to choose a range of positive integers
+that you would like to see classified
+  """)
+
+def print_table_heading():
+  print("""
+    Int     Classifications...............................
+------------------------------------------------------------------
+    """)
+    
+def is_prime(n):
+    if (n==1):
+        return False
+    elif (n==2):
+        return True;
+    else:
+        for x in range(2,n):
+            if(n % x==0):
+                return False
+        return True  
+
+
+def sum_divisors(number):
+    divisors = [1]
+    for i in range(2, number):
+        if (number % i)==0:
+            divisors.append(i)
+    return sum(divisors)
+
+def check_for_perfect(number):
+  result = sum_divisors(number)
+  if result == number:
+    return "perfect"
+  elif result > number:
+    return "abundant"
+  elif result < number:
+    return "deficient"
+
+def is_divisor(a, b):
+  if a % b ==0:
+    return True
+  else:
+    return False 
+
+def sum_divisors(n):
+  sum = 0
+  for i in range(1,n):
+    if n % i == 0:
+      sum += i
+  return sum 
+
+
+
+def is_square(n):
+    if n<1:
+      return False
+    elif n == 1:
+      return True
+    else:
+      for i in range(int(n/2)+1):
+          if (i*i)==n:
+              return True
+      return False
+
+def is_triangular(n):
+  sum =0 
+  for i in range(1, n+1):
+    sum += i
+    if sum == n:
+      return True
+  return False 
+
+def is_odd(n):
+  if n % 2 != 0:
+    return "Odd"
+  else:
+    return "Even"
+
+def print_table_line(n, odd, prime, perfect, square, triangular):
+    # # prints the information for one number on one line of the table.
+    # odd = 'Odd' if odd else 'Even'
+    # square = 'Square' if square else ''
+    # triangular = 'Triangular' if triangular else ''
+    print('\t%-10s %-10s %-10s %-10s %-10s %-10s' % (str(n), odd, prime, perfect, square, triangular))
+  
+print_greeting()
+
+time.sleep(1)
+
+print("Please enter a value from 1 to 100,000")
+time.sleep(0.5)
+start = int(input("Please enter a starting point: "))
+
+print("Please enter a value from 1 to 100,000")
+time.sleep(0.5)
+stop = int(input("Please enter a stopping point: "))
+
+if start > 100000 or stop > 100000:
+  print("One of the inputs is too high!")
+  time.sleep(1)
+  print("Program exiting...")
+  exit()
+
+if start < 0 or stop < 0:
+  print("Negative numbers: Invalid input.")
+  time.sleep(1)
+  print('Program exiting...')
+  exit()
+
+if stop < start:
+  print("Stop value smaller than start value.")
+  time.sleep(1)
+  print("Program exiting...")
+  exit()
+
+print_table_heading()
+
+for i in range(start, stop+1):
+  odd = is_odd(i)
+  prime= ""
+  perfect = check_for_perfect(i)
+  square = ""
+  triangular = ""
+
+  if i != 1:
+    if is_prime(i):
+      prime = "Prime"
+    else:
+      prime = "Composite"
+  else:
+    prime = "Neither"
+  
+  if is_square(i):
+    square = 'Square'
+  if is_triangular(i):
+    triangular = 'Triangular'
+
+  print_table_line(i, odd, prime, perfect, square, triangular)
