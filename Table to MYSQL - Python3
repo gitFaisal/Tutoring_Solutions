@@ -1,0 +1,88 @@
+import mysql.connector
+import pandas as pd 
+
+df = pd.read_csv('healthcare_visits.csv')
+
+df_cols = df.columns
+
+my_cols = ['FIPS', 
+    'march_1', 
+    'march_2' , 
+    'march_3' , 
+    'march_4' ,
+    'march_5' , 
+    'march_6' , 
+    'march_7' , 
+    'march_8' ,
+    'march_9' , 
+    'march_10' , 
+    'march_11' , 
+   'march_12' ,
+    'march_13' , 
+    'march_14' , 
+   'march_15' , 
+    'march_16' ,
+    'march_17' , 
+    'march_18' , 
+    'march_19' , 
+    'march_20' ,
+    'march_21' ]
+    
+new_names_dict = {}
+for i in range(0, len(my_cols)):
+    new_names_dict[df_cols[i]] = my_cols[i]
+    
+new_names_dict
+
+df.rename(columns=new_names_dict, inplace=True)
+
+# Connect to mysql database
+mydb = mysql.connector.connect(host='localhost', user='root',password='testpassword', database='health')
+# Create cursor object
+mycursor = mydb.cursor()
+
+# Sql statement to create new table in health database
+sql = """create table healthcare_visits (
+    FIPS float, 
+    march_1 float, 
+    march_2 float, 
+    march_3 float, 
+    march_4 float,
+    march_5 float, 
+    march_6 float, 
+    march_7 float, 
+    march_8 float,
+    march_9 float, 
+    march_10 float, 
+    march_11 float, 
+    march_12 float,
+    march_13 float, 
+    march_14 float, 
+    march_15 float, 
+    march_16 float,
+    march_17 float, 
+    march_18 float, 
+    march_19 float, 
+    march_20 float,
+    march_21 float
+)"""
+# Execute sql statement using cursor object
+mycursor.execute(sql)
+
+# Commit changes to database
+
+mydb.commit()
+
+# Create column list for insertion
+
+cols = "`,`".join([str(i) for i in df.columns.tolist()])
+
+# Insert DataFrame records one by one & commit
+for i, row in df.iterrows():
+    sql = "INSERT INTO `healthcare_visits` (`" +cols + "`) VALUES (" + "%s,"*(len(row)-1) + "%s)"
+    mycursor.execute(sql, tuple(row))
+    mydb.commit()
+
+# Close connections
+mycursor.close()
+mydb.close()
