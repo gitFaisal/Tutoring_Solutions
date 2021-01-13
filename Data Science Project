@@ -1,0 +1,87 @@
+**Notes for Algo**
+- dict to hold {'h_code':}**
+
+- Need list of unique h_codes**
+
+
+
+- loop through unqiue h_codes**
+    - Need a final_arr for dicts above loop to hold each 'h_code'**
+    
+    - create a filtered dataframe for each h_code**
+    - create three variable to hold totals for each income group**
+    - three dicts to hold a ladder each for income groups**
+        keys as percentage and w-code as value
+    - tot_per variable to build ladder with. reset after each group**
+    - loop through a list of each income group**
+        - update each ladder
+    - outside the loop 3 dictionaries to hold each ladder for income groups
+        - append to the array the three ladders 
+    - final_dict_h_codes['h_code']: final_arr
+    
+    
+final_dict = {} 
+
+unique_h_codes = list(df['h_geocode'].unique())
+
+for h_code in unique_h_codes:
+    final_arr = []
+    filtered_df = df[df['h_geocode'] == h_code]
+    # Reset index so we can access 'w_code' using iloc
+    filtered_df.reset_index(drop=True, inplace=True)
+    # totals for each column in filtered_df
+    se01_total = filtered_df['SE01'].sum()
+    se02_total = filtered_df['SE02'].sum()
+    se03_total = filtered_df['SE03'].sum()
+    # ladders dicts
+    se01_ladder = {} 
+    se02_ladder = {}
+    se03_ladder = {}
+    # total_percentage to hold growing ladder percentage
+    tot_percent = 0
+    
+    list_length = len(list(filtered_df['SE01']))
+    # list for each of the income groups
+    se01_values = list(filtered_df['SE01'])
+    se02_values = list(filtered_df['SE02'])
+    se03_values = list(filtered_df['SE03'])
+    
+    # Loop for se01
+    for i in range(0, list_length):
+        percent = float(se01_values[i] / se01_total)
+        # Skipping zero values
+        if percent != 0:
+            tot_percent += percent
+            # Locate row with corresponding w_code using i as our index in iloc
+            w_code = filtered_df.iloc[i]['w_geocode']
+            se01_ladder[str(round(tot_percent,3))] = w_code
+    
+    # Reset tot_percent 
+    tot_percent = 0
+    for i in range(0, list_length):
+        percent = float(se02_values[i] / se02_total)
+        # Skipping zero values
+        if percent != 0:
+            tot_percent += percent
+            # Locate row with corresponding w_code using i as our index in iloc
+            w_code = filtered_df.iloc[i]['w_geocode']
+            se02_ladder[str(round(tot_percent,3))] = w_code
+    
+    # Reset tot_percent 
+    tot_percent = 0
+    for i in range(0, list_length):
+        percent = float(se03_values[i] / se03_total)
+        # Skipping zero values
+        if percent != 0:
+            tot_percent += percent
+            # Locate row with corresponding w_code using i as our index in iloc
+            w_code = filtered_df.iloc[i]['w_geocode']
+            se03_ladder[str(round(tot_percent,3))] = w_code        
+          
+    final_arr.append(se01_ladder)
+    final_arr.append(se02_ladder)
+    final_arr.append(se03_ladder)
+    
+    final_dict[str(h_code)] = final_arr
+    
+        
