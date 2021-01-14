@@ -25,19 +25,24 @@ final_dict = {}
 unique_h_codes = list(df['h_geocode'].unique())
 
 for h_code in unique_h_codes:
-    final_arr = []
+   
+   final_arr = []
     filtered_df = df[df['h_geocode'] == h_code]
-    # Reset index so we can access 'w_code' using iloc
+   
+   # Reset index so we can access 'w_code' using iloc
     filtered_df.reset_index(drop=True, inplace=True)
-    # totals for each column in filtered_df
+   
+   # totals for each column in filtered_df
     se01_total = filtered_df['SE01'].sum()
     se02_total = filtered_df['SE02'].sum()
     se03_total = filtered_df['SE03'].sum()
+    
     # ladders dicts
     se01_ladder = {} 
     se02_ladder = {}
     se03_ladder = {}
-    # total_percentage to hold growing ladder percentage
+   
+   # total_percentage to hold growing ladder percentage
     tot_percent = 0
     
     list_length = len(list(filtered_df['SE01']))
@@ -47,7 +52,8 @@ for h_code in unique_h_codes:
     se03_values = list(filtered_df['SE03'])
     
     # Loop for se01
-    for i in range(0, list_length):
+   
+   for i in range(0, list_length):
         percent = float(se01_values[i] / se01_total)
         # Skipping zero values
         if percent != 0:
@@ -58,7 +64,8 @@ for h_code in unique_h_codes:
     
     # Reset tot_percent 
     tot_percent = 0
-    for i in range(0, list_length):
+   
+   for i in range(0, list_length):
         percent = float(se02_values[i] / se02_total)
         # Skipping zero values
         if percent != 0:
@@ -69,12 +76,15 @@ for h_code in unique_h_codes:
     
     # Reset tot_percent 
     tot_percent = 0
+    
     for i in range(0, list_length):
+        
         percent = float(se03_values[i] / se03_total)
+        
         # Skipping zero values
         if percent != 0:
             tot_percent += percent
-            # Locate row with corresponding w_code using i as our index in iloc
+             # Locate row with corresponding w_code using i as our index in iloc
             w_code = filtered_df.iloc[i]['w_geocode']
             se03_ladder[str(round(tot_percent,3))] = w_code        
           
