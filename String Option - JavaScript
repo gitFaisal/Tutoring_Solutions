@@ -1,0 +1,56 @@
+
+
+var str = "Dave Baker is an Elite {crew member|production crew member|video crew member}. This {designation|status|label|classification} by Assignment Desk is {an extra|an additional|a supplementary|yet another|one extra|one additional} {sign|mark|signal|indication|symbol|endorsement} of {quality|high quality|top quality|good quality|excellence|top notch quality|outstanding quality|superior quality|high-quality|value|superiority}. Elite {crews|crew members|production crew members|video crew members} {have been|are actually|are already|are entirely|have been completely} {vetted|checked} by Assignment Desk as {crew members|production crew members|video crew members|film staff} {that have been|who have been|which have been} on shoots {many times|often|frequently|repeatedly|on numerous occasions|again and again|many times before} with {quality|high quality|top notch|excellent} equipment. {You can trust that|You can rely on|You can be confident|You can depend on|Have confidence} an Elite {crew|staff member} {will|will certainly|is going to|would certainly|will definitely} {bring|deliver|provide} {an extra|an additional} {level of|amount of|degree of} service on your shoot."
+
+
+
+
+
+function change(str) {
+  // We need an options_array to hold each of the option strings. ex: ['{A|B|C}', '{C|D}']
+  let options_array = []
+  // This boolean variable used to control if we are in capture mode or skip, as we loop
+  // through our str string.
+  let capture_string = false
+  // When we are in capture mode, we want to save our elements to the option_string.
+  // Then once we are our of capture mode we, save what we got to options_array.
+  // For later use.
+  let option_string = ""
+  // Once we captured all the options in a array, we can loop through it and replace
+  // the options '{}' with a random value from the option.
+  for (let i=0; i <str.length; i++) {
+    // If during our loop we encounter a '{' we switch modes to capture = true.
+    if (str[i] == '{') {
+      capture_string = true 
+    // If we encounter a closing '}', we switch modes of capture = false.
+      } else if (str[i] == '}') {
+      // Before switching to skipping element, we want to save the closing '}' to our option_string.
+      option_string += str[i]
+      // Switch mode to false, so we don't capture other parts of string.
+      capture_string = false
+      // Push the saved elements in option_string. Which should be one of the "{option1 | option2}"
+      options_array.push(option_string)
+      option_string = ""
+    }
+    // If we are in capture mode, we add each element of string to our current option_string.
+    if (capture_string == true) {
+      option_string += str[i]
+    }
+  }
+
+  // Once we have got all the options extracted from the string into an array.
+  // We loop through the options array and replace '{}' in orginal string with a random value.
+
+  for (let i=0; i < options_array.length; i++) {
+      // For each option, we replace the "{}", and then split them on "|" symbol. 
+      let split_item = options_array[i].replace('}',"").replace('{',"").split("|")
+      // Using the split_item array of current item, we get a random value using Math.random().
+      let random_item = split_item[Math.floor(Math.random() * split_item.length)]
+      // We replace the string, with the random value from our split array.
+      str = str.replace(options_array[i], random_item)
+  }
+  // Finally return the changed string.
+  return str 
+}
+
+console.log(change(str))
