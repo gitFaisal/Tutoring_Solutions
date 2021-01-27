@@ -1,5 +1,5 @@
 class Employee:
-# we add a class variable to count the number of employees
+# Variable to keep count of employees, also serves as an ID for objects.
   employee_number = 1
   def __init__(self, ename):
     # Set enumber to equal class varialble emp\
