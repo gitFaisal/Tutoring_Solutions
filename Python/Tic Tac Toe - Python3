@@ -1,0 +1,88 @@
+
+user = input("Enter your moves: ").upper()
+
+while True:
+  if len(user) != 9:
+    print("Invalid amount of moves.")
+    user = input("Enter your moves: ")
+  else:
+    break
+# XOXXXXX
+print('Enter cells:' + user)
+print('---------')
+print("|", user[0], user[1], user[2], "|")
+print("|", user[3], user[4], user[5], "|")
+print("|", user[6], user[7], user[8], "|")
+print('---------')
+
+# Have to check all the rows, return ends after first find of winner.
+
+def isWinner(b, l):
+  winners = 0
+
+  if (b[0] == l and b[1] == l and b[2] == l):  #top
+    winners += 1
+  if (b[3] == l and b[4] == l and b[5] == l):   #middle
+    winners += 1
+  if (b[6] == l and b[7] == l and b[8] == l):   #bottom
+    winners += 1
+  if (b[0] == l and b[3] == l and b[6] == l):  #left side
+    winners += 1
+  if (b[1] == l and b[4] == l and b[7] == l):  # down the middle
+    winners += 1
+  if (b[2] == l and b[5] == l and b[8] == l):  # down the right side
+    winners += 1
+  if (b[0] == l and b[4] == l and b[8] == l):  # diagonal
+    winners += 1
+  if (b[2] == l and b[4] == l and b[6] == l):
+    winners += 1 
+
+  if winners == 0:
+    return False
+  else:
+    return True
+
+  
+
+# o_counter = 0
+# x_num = 0
+# for i in range(0, 9):
+#     if user[i] == "X":
+#         x_num += 1
+#     if user[i] == "O":
+#         o_num += 1
+# print('abs',abs(x_num - o_num))
+
+o_counter = 0
+x_counter = 0
+for i in user:
+  if i.upper() == 'O':
+    o_counter += 1 
+  elif i.upper() == 'X':
+    x_counter += 1
+
+if abs(o_counter - x_counter) >= 2:
+    print("Impossible")
+
+
+
+elif not isWinner(user, 'X') and not isWinner(user, 'O'):
+  if "_" in user:
+    print("Game not finished")   
+
+elif isWinner(user, 'X') and isWinner(user, 'O'):
+    print("Impossible")
+     
+
+
+elif isWinner(user, 'O'):
+  print('O wins')    # X wins 
+elif isWinner(user, 'X'):
+  print('X wins')
+  # O wins 
+
+print("\n*****Tests****")
+print("O count: ",o_counter)
+print("X count: ",x_counter)
+print("winner O?:",isWinner(user,'O'))
+print("winner X?:",isWinner(user,'X'))
