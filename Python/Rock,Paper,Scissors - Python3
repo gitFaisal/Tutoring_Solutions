@@ -1,0 +1,74 @@
+import random
+
+options = ['rock', 'paper', 'scissors']
+
+
+def random_choice():
+  return random.choice(options)
+
+def play():
+  # lives go here
+  cpu_lives = 3
+  player_lives = 3
+  # Ask user if they want to pick lives amount.
+  lives_option = input("Would you like to pick the amount of lives you have? (Y|N)").upper()
+  # If yes, we ask how many and set the lives variables to that amount.
+  if lives_option == 'Y':
+    lives = input("How many lives do you want?  ")
+    cpu_lives = lives 
+    player_lives = lives 
+
+ # Using this boolean variable to control the while loop.
+  game_over = False
+
+  print("Ready to play?!")
+  print("---------------\n")
+  # While out game_over is False, we continue to run loop.
+  while game_over == False:
+    # Using format to plug in current values of lives from variable above.
+    print("Cpu Lives: {}".format(cpu_lives))
+    # Cpu makes a random move, while player is asked to type move.
+    cpu_move = random_choice()
+    player_move = input("Rock, Paper, or Scissors: ").lower()
+    # We evaluate who wins and adjust lives accordingly
+    if cpu_move == player_move:
+      print("Tie")
+    elif player_move == 'rock':
+      if cpu_move == 'scissors':
+        cpu_lives -= 1 
+        print("You Win! CPU had Scissors")
+      else:
+        player_lives -= 1 
+        print("You Lose! CPU had Paper")
+    elif player_move == 'paper':
+      if cpu_move == 'rock':
+        cpu_lives -= 1
+        print("You Win! CPU had Rock") 
+      else:
+        player_lives -= 1 
+        print("You Lose! CPU had Scissors")
+    elif player_move == 'scissors':
+      if cpu_move == 'paper':
+        cpu_lives -= 1 
+        print("You Win! CPU had Paper")
+      else:
+        player_lives -= 1
+        print("You Lose! CPU had Rock") 
+    # If either player or cpu falls to 0 lives, the other is announced as winner.
+    if cpu_lives == 0:
+      print("Player wins!")
+      game_over = True
+    elif player_lives == 0:
+      print("Cpu wins!")
+      game_over = True
+    print("You have {} lives left\n".format(player_lives))
+
+# While the loop is uninterupted, we execute the play_game() function.
+while True: 
+  play()
+  # If user doesn't want to play anymore, we break the loop. Ending program.
+  play_again = input("Would you like to play again? (Y|N): ").upper()
+
+  if play_again == 'N':
+    break
+  
