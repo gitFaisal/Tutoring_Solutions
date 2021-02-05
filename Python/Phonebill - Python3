@@ -1,0 +1,49 @@
+
+
+def phonebill(mins, data):
+  print("")
+  print("Welcome to the Phone Bill Calculator!\n")
+  monthly_basic_fee = 39.99
+  monthly_data_fee = 30
+  minute_charge = 0
+  gb_charge = 0
+
+
+  if mins > 450:
+    excess_mins = mins - 450 
+    minute_charge = excess_mins * 0.45
+
+  if data > 3:
+    partial_gb = data % 1 
+    if partial_gb > 0:
+      data = data + (1 - partial_gb)
+
+    excess_gb = data - 3
+    gb_charge = excess_gb * 10
+  
+  bill_total = monthly_basic_fee + monthly_data_fee + minute_charge + gb_charge 
+
+  print("The number of minutes you used: {}\n".format(mins)) 
+  print("The amount of data you used: {}\n\n\n".format(data))
+
+  print("Your basic plan cost ${}/month\n".format(monthly_basic_fee))
+  print("You will be charged ${} for the minutes you used\n".format(minute_charge))
+  print("Your monthly data fee is $30.00\n")
+  print("You will be charged ${} for the extra data you used\n".format(gb_charge))
+  print("Your total bill is ${}".format(round(bill_total, 2)))
+
+
+       
+inputMinutes = [500, 512, 45]
+inputData = [5, 4.2, 2]
+
+
+
+
+for i in range(0,3):
+
+  print("Output #{}".format(i + 1))
+  phonebill(inputMinutes[i], inputData[i])
+
+  print("")
+
