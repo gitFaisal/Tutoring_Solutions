@@ -1,0 +1,40 @@
+string = "9876543210"
+
+def convert(string):
+  final = "" # Returning this once we have a complete string.
+  prev = "" # Hold the prev number we want to compare current number to.
+  temp = "" # Current number we are comparing, if smaller we make it bigger.
+  for i in string:
+    # We check if our index is 0, it means its the first element.
+    # Since there is nothing to compare it to, we set it to final and prev.
+    if string.index(i) == 0:
+      final = i 
+      prev = i 
+    # Check if our temp string is not empty
+    elif len(temp) != 0:
+      # If it has someting in it, we add our current i to it.
+      temp +=i
+      # We then compare the new temp to our prev number.
+      if int(temp) > int(prev):
+        # if our temp is biggerm we add a space and then add the temp to final.
+        final += " "
+        final += temp
+        # We update the prev number to equal to now bigger temp number.
+        prev = temp 
+        # We set temp to empty, for next number.
+        temp = ""
+    
+    elif int(i) > int(prev):
+      # If our number is bigger than prev, and our temp is empty.
+      final += " "
+      final += i
+
+      prev = i 
+    # If everything above was not true, then we add i to our temp variable.
+    else:
+      temp += i
+  # Finally we return the final string.
+  return final
+
+print(convert(string))
+
