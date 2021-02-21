@@ -22,5 +22,6 @@ class Circle {
   }
 }
 
+
 const cir = new Circle(4, "red");
 console.log(cir.changeColor("purple"))
