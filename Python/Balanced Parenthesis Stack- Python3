@@ -1,0 +1,69 @@
+
+
+
+# def isValid(string):
+
+#   stack = []
+#   # Our list of openers that we will use to check i's value in the loop.
+#   openers = ['(', '{', '[', '<']
+
+#   for i in string:
+    
+#     if i in openers:
+#       stack.append(i)
+    
+#     else:
+#       # If stack is empty, meaning the first character was a 'closer', return False
+#       if not stack:
+#         return False 
+#     # The last element in our stack
+#     current = stack.pop()
+#     # 4 if statements to check for each type of character we are dealing with.
+#     if current == '(':
+#         if i != ')':
+#           return False
+#     if current == '{':
+#       if i != '}':
+#         return False
+#     if current == '[':
+#       if i != ']':
+#         return False
+#     if current == '<':
+#       if i != '>':
+#         return False
+#   # Check to see if stack has anything in it, if it does return False
+#   if len(stack) != 0:
+#     return False
+#   # Finally return True if all conditions passed
+#   return True
+
+
+  
+# Function to check parentheses 
+def isValid(expr):
+  openers = ["[","{","(", "<"] 
+  closers = ["]","}",")", ">"] 
+  count = 0
+  stack = []
+  if expr[-1] not in closers:
+    count += 1
+  for i in expr:
+    count += 1
+    if i in openers:
+        stack.append(i)
+    elif i in closers:
+        pos = closers.index(i)
+        if ((len(stack) > 0) and (openers[pos] == stack[len(stack)-1])):
+            stack.pop()
+        else:
+            return "NO {}".format(count)
+
+  if len(stack) == 0:
+      return "YES"
+  else:
+      return "NO {}".format(count)
+
+string = '(a++()'
+str2 = '([))'
+print(isValid(string))
+print(isValid(str2))
