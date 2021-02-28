@@ -1,0 +1,271 @@
+
+
+# 1 Two brands Sealy / Simmons 
+# Ask users for brand, size (king, queen, full, twin)
+# sealy - med, firm, ext firm
+# simmons - cushion firm, firm, ext firm
+
+# option to add box spring
+
+# Shipping methods: standard: 100 , next-day shippping: 300
+
+# Promo code: 10% off "sleep" if entered
+
+# tax is 6.25% 
+
+print("Welcome!\n")
+
+mattress_brand = input("Please select the mattress brand (1 - Sealy, 2 - Simmons): ")
+
+SEALY_MATTRESSES = {
+          
+          'King':{'Medium':1800, 'Firm':2200, 'Extra_Firm': 2400},
+          'Queen':{'Medium':1400, 'Firm':1800, 'Extra_Firm': 2000},
+          'Twin':{'Medium':900, 'Firm':1300, 'Extra_Firm': 1500}
+          
+}
+SIMMONS_MATTRESSES = {
+          
+          'King':{'Cushion':2000, 'Firm':2500, 'Extra_Firm':3000},
+          'Queen':{'Cushion':1400, 'Firm':1900, 'Extra_Firm':3400},
+          'Full':{'Cushion':1000, 'Firm':1500, 'Extra_Firm':2000}
+} 
+# Constant box spring prices.
+BOX_SPRING = {'King':400, 'Queen':200, 'Full':200, 'Twin':100}
+# Constant for shipping prices.
+SHIPPING = {'Standard': 100, 'Next_day':300}
+# Constant for tax.
+TAX = 0.0625
+# Constant for promo 
+PROMO = .9
+
+mattress_price = 0
+box_spring_price = 0
+discount = 0
+shipping_charge = 0
+tax_charged = 0
+
+total_price = 0
+
+if mattress_brand == '1':
+  size = input("Please select the size (K - King, Q - Queen, T - Twin): ").upper()
+  comfort = input("Please select the comfort level (M - Medium, F - Firm, E - Extra Firm): ").upper()
+  box_spring = input("Do you like to have box springs (Y - Yes, N - No)? ").upper()
+  shipping = input("Which shipping mode do you like (S - Standard, N - Next Day)? ").upper()
+  promotion = input("Promotion code: ").lower()
+#size of matters 
+  if size == 'K':
+    # comfort of matters 
+    if comfort == 'M':
+      mattress_price = SEALY_MATTRESSES['King']['Medium']
+      total_price += mattress_price
+    
+    elif comfort == 'F':
+      mattress_price = SEALY_MATTRESSES['King']['Firm']
+      total_price += mattress_price
+    
+    elif comfort == 'E':
+      mattress_price = SEALY_MATTRESSES['King']['Extra_Firm']
+      total_price += mattress_price
+#size of matters 
+#matters dictionary, specifically sealy's 
+  elif size == 'Q':
+     # comfort of matters
+    if comfort == 'M':
+      mattress_price = SEALY_MATTRESSES['Queen']['Medium']
+      total_price += mattress_price
+    
+    elif comfort == 'F':
+      mattress_price = SEALY_MATTRESSES['Queen']['Firm']
+      total_price += mattress_price
+    
+    elif comfort == 'E':
+      mattress_price = SEALY_MATTRESSES['Queen']['Extra_Firm']
+      total_price += mattress_price 
+  #size of matterress
+  elif size == 'T':
+     # comfort of matters
+    if comfort == 'M':
+      mattress_price = SEALY_MATTRESSES['Twin']['Medium']
+      total_price += mattress_price 
+
+    elif comfort == 'F':
+      mattress_price = SEALY_MATTRESSES['Twin']['Firm']
+      total_price += mattress_price 
+
+    elif comfort == 'E':
+      mattress_price = SEALY_MATTRESSES['Twin']['Extra_Firm']
+      total_price += mattress_price 
+
+  # Add Box-spring price
+  #use dictionary BOX_SPRING 
+  if box_spring == 'Y':
+    
+    if size == 'K':
+      box_spring_price = BOX_SPRING['King']
+      total_price += box_spring_price 
+   
+    elif size == 'Q':
+      box_spring_price = BOX_SPRING['Queen']
+      total_price += box_spring_price 
+   
+    elif size == 'T':
+      box_spring_price = BOX_SPRING['Twin']
+      total_price += box_spring_price 
+
+  if shipping == 'S':
+    shipping_charge += SHIPPING['Standard']
+    
+
+  elif shipping == 'N':
+    shipping_charge += SHIPPING['Next_day']
+
+  if promotion == 'sleep':
+    discount = total_price - (total_price * PROMO)
+    total_price *= PROMO
+    
+  tax_charged = total_price * TAX
+
+
+# SIM
+
+
+
+
+
+
+elif mattress_brand == '2':
+  size = input("Please select the size (K - King, Q - Queen, F - Full): ").upper()
+  comfort = input("Please select the comfort level (C - Cushion Firm , F - Firm, E - Extra Firm): ").upper()
+  box_spring = input("Do you like to have box springs (Y - Yes, N - No)? ").upper()
+  shipping = input("Which shipping mode do you like (S - Standard, N - Next Day)? ").upper()
+  promotion = input("Promotion code: ").lower()
+#size of matters 
+  if size == 'K':
+    # comfort of matters 
+    if comfort == 'C':
+      mattress_price = SIMMONS_MATTRESSES['King']['Cushion']
+      total_price += mattress_price
+    
+    elif comfort == 'F':
+      mattress_price = SIMMONS_MATTRESSES['King']['Firm']
+      total_price += mattress_price
+    
+    elif comfort == 'E':
+      mattress_price = SIMMONS_MATTRESSES['King']['Extra_Firm']
+      total_price += mattress_price
+#size of matters 
+#matters dictionary, specifically sealy's 
+  elif size == 'Q':
+     # comfort of matters
+    if comfort == 'C':
+      mattress_price = SIMMONS_MATTRESSES['Queen']['Cushion']
+      total_price += mattress_price
+    
+    elif comfort == 'F':
+      mattress_price = SIMMONS_MATTRESSES['Queen']['Firm']
+      total_price += mattress_price
+    
+    elif comfort == 'E':
+      mattress_price = SIMMONS_MATTRESSES['Queen']['Extra_Firm']
+      total_price += mattress_price 
+  #size of matterress
+  elif size == 'F':
+     # comfort of matters
+    if comfort == 'C':
+      mattress_price = SIMMONS_MATTRESSES['Full']['Cushion']
+      total_price += mattress_price 
+
+    elif comfort == 'F':
+      mattress_price = SIMMONS_MATTRESSES['Full']['Firm']
+      total_price += mattress_price 
+
+    elif comfort == 'E':
+      mattress_price = SIMMONS_MATTRESSES['Full']['Extra_Firm']
+      total_price += mattress_price 
+
+  # Add Box-spring price
+  #use dictionary BOX_SPRING 
+  if box_spring == 'Y':
+    
+    if size == 'K':
+      box_spring_price = BOX_SPRING['King']
+      total_price += box_spring_price 
+   
+    elif size == 'Q':
+      box_spring_price = BOX_SPRING['Queen']
+      total_price += box_spring_price 
+   
+    elif size == 'F':
+      box_spring_price = BOX_SPRING['Full']
+      total_price += box_spring_price 
+
+  if shipping == 'S':
+    shipping_charge += SHIPPING['Standard']
+
+  elif shipping == 'N':
+    shipping_charge += SHIPPING['Next_day']
+
+  if promotion == 'sleep':
+    discount = total_price - (total_price * PROMO)
+    total_price *= PROMO
+    
+  tax_charged = total_price * TAX
+
+
+heading = {'1': 'Sealy mattress', '2':'Simmons mattress', 'K':'King size', 'Q': 'Queen size', 'T':'Twin size', 'C': 'Cushion Firm', 'F':'Firm', 'E':'Extra Firm', 'M':'Medium' }
+company = ""
+company_size = ""
+company_comfort = ""
+# Update company for heading
+if mattress_brand == '1':
+  company = heading['1']
+elif mattress_brand == '2':
+  company = heading['2']
+
+# Update size for heading
+if size == 'K':
+  company_size = heading['K']
+elif size == 'Q':
+  company_size = heading['Q']
+elif size == 'T':
+  company_size = heading['T']
+else:
+  company_size = 'Full size'
+# Update comfort for heading
+if comfort == 'M':
+  company_comfort = heading['M']
+elif comfort == 'F':
+  company_comfort = heading['F']
+elif comfort == 'E':
+  company_comfort = heading['E']
+elif comfort == 'C':
+  company_comfort = heading['C']
+
+print("\n\n")
+print("="*15+"Order Summary"+"="*20)
+print("{}, {}, {}".format(company, company_size, company_comfort))
+print("Mattress:\t\t\t\t${}".format(mattress_price))
+if box_spring == 'Y':
+  print("Box springs:\t\t\t${}".format(box_spring_price))
+if discount != 0:
+  print("Discount:\t\t\t\t$-{}".format(discount))
+print("Subtotal:\t\t\t\t${}".format(total_price))
+if shipping == 'S':
+  print("Standard Shipping:\t\t${}".format(shipping_charge))
+elif shipping == 'N':
+  print("Next-day shipping:\t\t${}".format(shipping_charge))
+print('Tax:\t\t\t\t\t${}'.format(tax_charged))
+print('------------------------------------------------')
+print('Total:\t\t\t\t\t${}'.format(total_price + tax_charged + shipping_charge))
+
+
+
+
+
+# print(matress_price)
+# print(box_spring_price)
+# print(discount)
+# print(tax_charged)
+# print(total_price)
+
