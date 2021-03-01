@@ -1,0 +1,174 @@
+#  Define all our constants
+MIN = 0
+MAX_HR = 23
+MAX_MIN = 59
+POUND = 1.5373
+KRONOR = 0.139083
+EUROS = 1.3496
+RUBLES = 0.034338
+LONDON_HRS = 5
+STOCKHOLM_HRS = 6
+TEMPERE_HRS = 7
+HELSINKI_HRS = 7
+ST_PETER_HRS = 8
+
+
+def print_greeting():
+    print("""
+  Welcome to the conversion program!  
+    
+""")
+
+
+def display_main_menu():
+  print('What would you like to convert ? ')
+  print('\t1 - Time')
+  print('\t2 - Currency')
+  print('\t3 - Temperature')
+  print('\t4 - Quit')
+
+def get_valid_int(question, min_value, max_value):
+  user_input = float(input(question))
+  while True:
+    if user_input < min_value:
+      print("Number input smaller than minimum amount allowed")
+      user_input = float(input(question))
+    elif user_input > max_value:
+      print("Number input larger than maximum amount allowed")
+      user_input = float(input(question))
+    else:
+      break
+
+  return user_input
+
+
+def display_location_menu():
+  print("""
+L) London
+S) Stockholm
+T) Tempere
+H) Helsinki
+P) St.Petersburg
+M) Return to the Main menu  
+    """)
+  user_input = input("Please select city using its assigned letter: ").upper()
+  return user_input
+
+# Deconstruct 
+def get_valid_time():
+  hour = get_valid_int('Enter the hour ( 0 - 23 )', MIN, MAX_HR)
+  minute = get_valid_int('Enter the mininutes ( 0 - 59 )', MIN, MAX_MIN)
+  return hour, minute
+
+
+def foreign_time_to_eastern(hour, location):
+  est_hour = None
+  abbrev = None
+  return est_hour, abbrev
+
+
+def convert_time():
+  while True:
+      # Display the location menu
+      location = display_location_menu()
+
+      if location == 'M':
+          return
+
+      # Get the valid time from the user
+      hour, minute = get_valid_time()
+
+      # Convert the hour into the appropriate hour
+      est_hour, abbreviation = foreign_time_to_eastern(hour, location)
+
+      # Display the result to the user
+      print(f'{est_hour}:{minute}{abbreviation}')
+
+
+def get_positive_real(question):
+    # prompt the user with the given question
+    # make sure the value that the user provide is positive and return it
+    amount = float(input(question))
+    while True:
+      if amount < 0:
+        print("Please enter a positive value")
+        amount = float(input(question))
+      else:
+        break
+    return amount
+
+
+def foreign_to_dollars(amount, currency):
+  usd = 0
+  if currency == 'L':
+    usd += amount * POUND
+  elif currency == 'S':
+    usd += amount * KRONOR
+  elif currency == 'T':
+    usd += amount * EUROS
+  elif currency == 'H':
+    usd += amount * EUROS
+  elif currency == 'P':
+    usd += amount * RUBLES
+  return round(usd,2)
+
+
+def convert_currency():
+
+  # Display the location menu
+  location = display_location_menu()
+  if location == 'L':
+    amount = get_positive_real("How many Pounds? ")
+  elif location == 'S':
+    amount = get_positive_real("How many Kronor? ")
+  elif location == 'T':
+    amount = get_positive_real("How many Euros? ")
+  elif location == 'H':
+    amount = get_positive_real("How many Euros? ")
+  elif location == 'P':
+    amount = get_positive_real("How many Rubles? ")
+
+  # Convert the amount based on the location picked by the user
+  converted_amount = foreign_to_dollars(amount, location)
+  
+  print(f'\n{amount} is ${converted_amount}\n')
+
+def celsius_to_fahrenheit(celsius):
+  fahrenheit = (celsius * (9/5)) + 32
+  return round(fahrenheit,1)
+
+
+def convert_temp():
+  # Prompt the user for the celsius
+  # Note: Either call the get_valid_int or get_positive_real
+  celsius = round(get_valid_int("Enter Temperature in celsius: ", -88, 58),1)
+  fahrenheit = celsius_to_fahrenheit(celsius)
+
+  # Display it to the user
+  print(f'{celsius} Degrees C is {fahrenheit} Degrees F \n')
+
+
+def main():
+  # Great the user
+  print_greeting()
+  condition = True
+  while condition:
+      # display the main menu
+      display_main_menu()
+
+      # Get the user choice
+      user_choice = get_valid_int('Please make a selection (1 - 4): ', 1, 4)
+      if user_choice == 1:
+          convert_time()
+      elif user_choice == 2:
+          convert_currency()
+      elif user_choice == 3:
+          convert_temp()
+      elif user_choice == 4:
+          print('Thank you for using my awesome application')
+          condition = False
+
+
+# Call our main
+main()
+
