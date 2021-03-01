@@ -1,0 +1,66 @@
+
+# Let's first recall what we have done in Question 10 of Homework 02. Your task was to author a function, mutate(dna, motif), which looks for an inverted repeat of the given motif, and if found, which returns the DNA strand that would result after deleting the implicit loop that forms. More specifically, your function's high-level logic should be
+
+# Look for the leftmost occurrence of the original motif. If none is found, then return the original dna unmodified.
+
+# Starting after the end of the original motif, look for the next subsequent occurrence of the reverse complement of that motif (the so-called inverted repeat). If no such occurrence is found, return the original dna unmodified.
+
+# Compute and return the mutated DNA that results from removing the motif, its inverted repeat, and then zero or more characters that might be found between them. 
+
+# Your function is only responsible for performing a mutation that occurs between the first occurrence of the pattern, and the next subsequent occurrence of the inverted repeat (that which is completely disjoint from the forward motif).
+
+
+dna = "ATC CGAATACGGTTCG GGTA"
+
+def reverse_complement(seq):
+  # Dict to keep track of opposing values.
+  complement = {'A': 'T', 'C': 'G', 'G': 'C', 'T': 'A'} 
+  # Result string to hold our end results.
+  result = ""
+  # Loop through seq provided.
+  for i in seq:
+    # Use i as key to look up value in complement dictionary.
+    result += complement[i.upper()]
+  # Return the result string reversed using [::-1] slicing method.
+  return result[::-1]
+
+# print("rev test:", reverse_complement(dna))
+
+
+
+
+dna = "ATC CGAATACGGTTCG GGTA"
+motif = "CGAA"
+
+def mutate(dna, motif):
+  # String to collect from motif to the reverse of motif.
+  bases_collected = ""
+  # Boolean flag to control when we are in collect mode. Start off as False until we find the motif.
+  collect_mode = False
+  # Create a loop with numbers ranging from 0 - len(dna)
+  # This allows us to use the numbers 'i' in place of indexes for dna string.
+  for i in range(0, len(dna)):
+    # If current i + the next 3 elements == our motif we change collect_mode to True.
+    if dna[i:i+4] == motif:
+      collect_mode = True
+    # If we find our reverse of motif, we change collect_mode back to False
+    # At this point the collect statement will not collect anymore, so we take the current i plus the next three elements and add it to the end of our bases_collected string. 
+    elif dna[i:i+4] == reverse_complement(motif):
+      bases_collected += dna[i:i+4]
+      collect_mode = False
+    # In our loop as long as collect_mode is True, we add each element to our bases_collected string.
+    if collect_mode == True:
+      bases_collected += dna[i]
+  # Once our loop is done collecting all the element we need, we replace the whole bases_collected string from our original dna string. Leaving us with the result that we want.
+  dna = dna.replace(bases_collected, "")
+  # We then return that result.
+  return dna
+
+print(mutate(dna, motif))
+
+  
+
+
+
+
+
