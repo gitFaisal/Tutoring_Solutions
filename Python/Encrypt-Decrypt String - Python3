@@ -1,0 +1,68 @@
+from string import ascii_lowercase
+from string import ascii_uppercase
+
+
+def encrypt(string_input,offset):
+  alpha_lower = list(ascii_lowercase)
+  alpha_upper = list(ascii_uppercase)
+  
+  result = ''
+
+
+  for i in string_input:
+    # First we check for alphabets
+    if i.isalpha():
+      
+      if i == i.upper():
+        # We get the index of our letter from the string, by using the index() list method.
+        # Example: some_list.index('i') - Returns where 'i' is found in some_list by index number.
+        index = alpha_upper.index(i) + offset
+        # If our index plus the offset is bigger than 25, we reset the index using (index % 25) - 1
+        if index > 25: 
+          index = (index % 25) - 1
+        # using our index we find the letter in our alphabet list. Add it to result string.
+        result += alpha_upper[index]
+      # This is samething for lower_case letters.
+      else:
+        index = alpha_lower.index(i) + offset
+    
+        if index > 25: 
+          index = (index % 25) - 1
+        
+        result += alpha_lower[index]
+    # If the element is not a alphabet, we add it to result string as it is. 
+    else:
+      result += i
+  # Finally after the loop is done, we return our result string.
+  return result
+
+def decrypt(string_input,offset):
+  alpha_lower = list(ascii_lowercase)
+  alpha_upper = list(ascii_uppercase)
+  result = ''
+
+  for i in string_input:
+
+    if i.isalpha():
+
+      if i == i.upper():
+        index = alpha_upper.index(i) + offset
+        if index > 25:
+          index = (index % 25) - 1
+        elif index < -26:
+          index = (index % - 26)
+        result += alpha_lower[index] 
+      else:
+        index = alpha_lower.index(i) + offset
+        if index > 25:
+          index = (index % 25) - 1
+          
+        elif index < -26:
+          index = (index % - 26)
+          
+        result += alpha_lower[index]
+
+    else:
+      result += i
+    
+  return result
