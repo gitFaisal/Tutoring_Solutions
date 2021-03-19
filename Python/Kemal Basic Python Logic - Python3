@@ -1,0 +1,35 @@
+'''
+His first customer will receive free donuts for a year
+His first 12 customers will receive a dozen free donuts today (the first customer gets both free donuts for a year and an immediate dozen, so they should be notified of both)
+His first 200 customers can purchase their first dozen donuts for $1, but because customers #1-12 already received the first dozen for free, they should not be notified of this deal (it’s really for customers #13-200)
+Customer #144 wins free donuts for a month (144 is Joe’s favorite number) and should not be notified of the dozen donuts for $1 either
+Customers #201-500 can purchase their donuts for half price
+Everyone else can take advantage of Joe’s last opening day offer: buy two donuts, get the third free - only show this notification to people who haven’t received any other offers
+Every single customer should be notified of a year-round deal they can share with their friends: buy a dozen donuts, get the 13th free!
+'''
+
+print("Welcome to Opening Day at Joe's Donuts! We're so glad you're here, and we have some special surprises for you!")
+
+customer = int(input("Which number customer were you? "))
+
+
+if customer == 1:
+  print("\nAs the first customer, you win free donuts for a year!")
+
+if customer < 13:
+  print("\nYou will receive a free dozen of donuts today!")
+
+if customer > 12 and customer < 201:
+
+  if customer == 144:
+    print("\nCongratulations! 144 is Joe's favorite number! You win free donuts for a month!")
+  else:
+    print("\nYou may purchase your first dozen donuts for $1!")
+
+if customer > 200 and customer < 501:
+  print("\nYou'll receive 50% off your purchase!")
+
+if customer > 500:
+  print("\nYou can buy two donuts, and get the third for free!")
+
+print("\nAnd just so you can tell all of your friends, Joe's Donuts also has a special deal that will last all year: buy a dozen donuts, get the 13th free!")
