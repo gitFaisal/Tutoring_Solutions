@@ -1,45 +1,104 @@
 
 import smtplib
+import os
+import time
+
+class Empty(Exception):
+  def __str__(self):
+    return "No value was entered"
+
+class InvalidCarNum(Exception):
+  def __str__(self):
+    return "This item was not found in our inventory"
+
+# Exception for delete_car() method
+class NotInCart(Exception):
+  def __str__(self):
+    return 'The item number you entered was not found in the cart'
+
+class InvalidNumber(Exception):
+  def __str__(self):
+    return "Invalid number entered (Positive Integers only)"
+
+class DuplicateItem(Exception):
+  def __str__(self):
+    return "This item already exits in your cart"
+
+
+
+def clear_screen():
+  os.system("cls" if os.name == 'nt' else "clear")
+
+def validate_days():
+  try:
+    days = int(input("Enter the number of days you want to borrow: "))
+
+    if days <= 0:
+      raise InvalidNumber
+    return days 
+
+  except ValueError:
+    clear_screen()
+    print("Invalid number entered (Positive Integers only)")
+  except InvalidNumber as IN:
+    clear_screen()
+    print(IN)
+
+def print_screen(option):
+  clear_screen()
+  print(f'''        
+  \n*************************************************************\n
+  \n                   ------ {option} ------\n
+  \n\n      <Press the ENTER key to return back to MAIN MENU>\n\n
+  \n*************************************************************\n''')
+
+
 
 
 class Car:
   def __init__(self,item_number,model,price):
-    self.item_number=item_number
-    self.model=model
-    self.price=price
+    self.item_number = item_number
+    self.model = model
+    self.price = price
 
   def __str__(self):
-    return '''
-    Item Number:{}\n
-    Model:{}\n
-    Daily Price:${}\n
+    return f'''
+    Item Number:{self.item_number}\n
+    Model:{self.model}\n
+    Daily Price:${self.price}\n
     
     *************************************************************
-    '''.format(self.item_number,self.model,str(self.price))
+    '''
 
 class Inventory:
   def __init__(self):
     self.cars = {}
 
   def add_cars(self):
-    with open("carlist.txt","r") as f:
-        file=f.readlines()
-        for line in file:
-          lst=line.rstrip("\n").split(",")
-          car=Car(lst[0],lst[1],float(lst[2]))
-          #print car
-          self.cars[car.item_number]=car
-
-  def get_car_by_item_number(self,item_num):
-    if item_num in self.cars.keys():
-        return self.cars[item_num]
-    else:
-        print("This item is not in our Inventory.\n")
+      """Reads data from txt file"""
+      f = open("carlist.txt","r")
+      for line in f.readlines():
+          line=line.strip("\n").split(",")
+          # Cast the price into a float as its being read from the txt file
+          car = Car(line[0],line[1],float(line[2])) 
+          self.cars[car.item_number] = car
+      f.close()
 
   
   def display(self):
-      for car in self.cars.values():
-          print(car)
+    clear_screen()
+    print("""
+        **** Cars available for rent ****
+    """)
+    print("Item Number\t\tModel\t\t\t\tDaily Price")
+
+    for car in self.cars.values():
+      car_model = car.model
+      if len(car_model) != 21:
+        spacing = " " * (21 - len(car_model))
+        car_model += spacing
+      print(f"{car.item_number}\t\t{car_model}\t\t${car.price}")
+      print("----------------------------------------------")
 
 
 # i want to make sure that methods inside each class are behaviors that make sense to the class, not sure if this class should be broken up into 2 or keep it? 
@@ -48,15 +107,38 @@ class Cart(Inventory):
     super().__init__()
     self.cars_choosen = [] 
 
-  def add_car(self,car_num):
-    self.add_cars()
-    self.cars_choosen.append(self.cars[car_num])
-    print(f"Car: {self.cars[car_num].model}\nSuccesfully Added to your Cart!\n")
-      # self.cars[car_num].model = car_num 
-      # print("Car:\n",self.cars[car_num.item_number],"\nSuccessfully Added to your Cart!")  # would like to only print 'Car: <model> Succesfully Added to Your Cart!'
+  def add_car(self):
+    print_screen("ADD Screen")
+    car_num = input("\n\nEnter the item number to add:  ")
+    
+    try:   
+      if car_num == "":
+        raise Empty
 
-  def get_cars(self):
+      self.add_cars()
+
+      if car_num not in self.cars.keys():
+        raise InvalidCarNum
+
+      if self.check_cart(car_num):
+        raise DuplicateItem
+      self.cars_choosen.append(self.cars[car_num])
+      clear_screen()
+      print(f"Car: {self.cars[car_num].model}\nSuccesfully Added to your Cart!\n")
+
+    except Empty as e:
+      clear_screen()
+      print(e)
+    except InvalidCarNum as I:
+      clear_screen()
+      print(I)
+    except DuplicateItem as DI:
+      clear_screen()
+      print(DI)
+    
+  def display(self):
     if len(self.cars_choosen) == 0:
+      clear_screen()
       print("Your cart is empty.\n")
     else:
       print("Cars in your cart: \n")
@@ -64,18 +146,38 @@ class Cart(Inventory):
         print(f"Item num - {i.item_number}: {i.model}")
       print("\n")
 
-  def delete_car(self, item_num):
-    for car in self.cars_choosen:
-      # When we find the correct car by comparing item numbers:
-      if car.item_number == item_num:
-        # Find the index location of that car, using index() method on our cars_choosen list.
-        index = self.cars_choosen.index(car)
-        
-        print(f"{self.cars_choosen[index].model} has been removed from your cart.\n")
-        # Delete that car using pop() method, by giving it the index of car.
-        self.cars_choosen.pop(index)
+  def check_cart(self, item_num):
+    for i in self.cars_choosen:
+      if item_num in i.item_number:
         return True
     return False
+ 
+  def delete_car(self):
+    clear_screen()
+    print_screen("DELETE screen")
+    self.display() # Fix
+    item_num = input("Please enter item number to remove: ")
+
+    try:
+      if item_num == "":
+        raise Empty
+      elif not self.check_cart(item_num):
+        raise NotInCart
+      
+
+      for car in self.cars_choosen:
+        # When we find the correct car by comparing item numbers:
+        if car.item_number == item_num:
+          # Find the index location of that car, using index() method on our cars_choosen list.
+          index = self.cars_choosen.index(car)
+          clear_screen()
+          print(f"{self.cars_choosen[index].model} has been removed from your cart.\n")
+          # Delete that car using pop() method, by giving it the index of car.
+          self.cars_choosen.pop(index)
+    except NotInCart as N:
+      print(N)
+    except Empty as E:
+      print(E)
 
   def checkout(self):
     if len(self.cars_choosen)==0:
@@ -84,19 +186,13 @@ class Cart(Inventory):
         # Loop through cars_choosen list.
         for car in self.cars_choosen: 
 
-          while True:
-          # While it's not correct, ask user again for days.
-            days = input("Enter the number of days you want to borrow: ")
+          days = validate_days()
 
-            if not days.isdigit():
-              print("Invalid Entry.")
-            elif int(days) <= 0:
-              print("Invalid Entry.") 
-            # If correct input if given we break out of the loop.
-            else:
-              days = int(days)
-              break
-          
+          if not days:
+            time.sleep(3)
+            clear_screen()
+            return
+
           i = car.price
           total= i * days
           
@@ -108,18 +204,23 @@ class Cart(Inventory):
           sender_email = 'python.oop304@gmail.com'
           password = 'Pythonpython'
           # User will be asked for their email.
-          rec_email = input("Enter your Email: ")
-          
-          # The message being sent.
-          message = "Your rental is ready for pick up!"
-          
-          # Server info.
-          server = smtplib.SMTP('smtp.gmail.com', 587)
-          server.starttls()
-          server.login(sender_email, password)
-          server.sendmail(sender_email, rec_email, message)
-          print("Email sent!")
-          server.close()
+          try:
+            rec_email = input("Enter your Email: ")
+            if rec_email == "":
+              raise Empty
+            # The message being sent.
+            message = "Your rental is ready for pick up!"
+            
+            # Server info.
+            server = smtplib.SMTP('smtp.gmail.com', 587)
+            server.starttls()
+            server.login(sender_email, password)
+            server.sendmail(sender_email, rec_email, message)
+            print("Email sent!")
+            server.close()
+          except Empty as E:
+            clear_screen()
+            print(E)
 
         else:
             return False
@@ -136,56 +237,41 @@ while True: # will need to add a 'delete' option as well
                             
                 Select from the following options:
 
-          \t'1.' - Display Cars for Rent 
-          \t'2.' - Add to Cart
-          \t'3.' - Delete item'
-          \t'4.' - View Cart
-          \t'5.' - Checkout
-          \t'6.' - Quit the program
+          \t1) - Display Cars for Rent 
+          \t2) - Add to Cart
+          \t3) - Delete item
+          \t4) - View Cart
+          \t5) - Checkout
+          \t6) - Quit the program
       \n\n*************************************************************
       """
       )
   # Try block that throws an exception when user did not select the right option.
-  try:
-    user_input = input("\n")
 
-    if user_input == '1':
-      car.add_cars()
-      car.display()
+  user_input = input("\n")
 
-    elif user_input == '2':
-      selected_car = input("Please enter Item Number: ")
+  if user_input == '1':
+    car.add_cars()
+    car.display()
 
-      cart.add_car(selected_car)
+  elif user_input == '2':
+    cart.add_car()
 
-    elif user_input == '3':
+  elif user_input == '3':
+    cart.delete_car()
 
-      delete_car = input("Please enter item number to remove: ")
-      try:
-        # This if statement evaluates the functions return statement, before executing the function.
-        # If the function returns False, it means we didn't find an item to delete, so we throw an exception.
-        if cart.delete_car(delete_car):
-          cart.delete_car(delete_car)
-        else:
-          raise Exception()
+  elif user_input == '4':
+    clear_screen()
+    print_screen("VIEW Screen")
+    cart.display()
+    input()
+    clear_screen()
+    
+  elif user_input == '5':
+    cart.checkout()
 
-      except:
-        print("The item number you entered was not found in the cart.\n")
-
-    elif user_input == '4':
-      cart.get_cars()
-
-    elif user_input == '5':
-      cart.checkout()
-
-    elif user_input == '6':
-      print("Program exiting...")
-      break
-
-    else:
-      # Throw an error, if the option isn't one of the options mentioned above.
-      raise Exception()
-
-  except:
-    # What the error message will say, when Exception() is thrown.
-    print("You entered an invalid option.")
+  elif user_input == '6':
+    print("Program exiting...")
+    time.sleep(1)
+    print("See you next time!")
+    break
