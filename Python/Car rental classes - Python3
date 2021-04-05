@@ -11,7 +11,6 @@ class InvalidCarNum(Exception):
   def __str__(self):
     return "This item was not found in our inventory"
 
-# Exception for delete_car() method
 class NotInCart(Exception):
   def __str__(self):
     return 'The item number you entered was not found in the cart'
