@@ -1,0 +1,149 @@
+
+grid = [ 0, 4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4  ]
+
+
+def get_players():
+  player1 = input("Please enter Player One: ")
+  player2 = input("Please enter Player Two: ")
+  if len(player1) < 8:
+    spaces = (8 - len(player1)) * " "
+    player1 += spaces
+  if len(player2) < 8:
+    spaces = (8 - len(player2)) * " "
+    player2 += spaces
+  print(f"\nPlayer One is {player1}\nPlayer Two is {player2}")
+  return [player1, player2]
+
+
+def is_winner(grid, turn):
+  if turn == 0:
+    for i in range(1, 7):
+      if grid[i] != 0:
+        return False
+    return True
+  elif turn == 1:
+    for i in range(8, 14):
+      if grid[i] != 0:
+        return False
+    return True
+
+
+def get_stones(grid_block):
+  stones = int(grid_block)
+
+  return stones 
+
+
+def take_turn(player):
+  print(f""" 
+----------------------------------------------------------------------
+|        |Cup 1   |Cup 2   |Cup 3   |Cup 4  |Cup 5  |Cup 6  |         |
+|        |        |        |        |       |       |       |         |
+|        | {grid[1]}      |  {grid[2]}     |  {grid[3]}     | {grid[4]}     | {grid[5]}     | {grid[6]}     |         |
+|{players[0]}|        |        |        |       |       |       |{players[1]} |
+|   {grid[0]}  --------------------------------------------------------  {grid[7]}    |
+|        |Cup 12  |Cup 11  |Cup 10  |Cup 9  |Cup 8  |Cup 7  |         |
+|        |        |        |        |       |       |       |         |
+|        | {grid[13]}      | {grid[12]}      | {grid[11]}      | {grid[10]}     | {grid[9]}     | {grid[8]}     |         |
+|        |        |        |        |       |       |       |         |
+ ----------------------------------------------------------------------
+
+""")
+
+  user_input = int(input(f"{player}'s turn to make a move: "))
+  while True:
+
+    if turn == 0:
+      if 0 < user_input < 7 and grid[user_input] != 0:
+        break
+      else:
+        print("Invalid Move")
+        user_input = int(input(f"{player}'s turn to make a move: "))
+    elif turn == 1:
+      user_input += 1
+      if  7 < user_input <= 13 and grid[user_input] != 0:
+        break
+      else:
+        print("Invalid Move")
+        print(user_input)
+        user_input = int(input(f"{player}'s turn to make a move: "))
+
+    
+    # if 0 < user_input <= 13 and grid[user_input] != 0:
+    #   break
+    # else:
+    #   print("Invalid Move")
+    #   user_input = int(input(f"{player}'s turn to make a move: "))
+
+    
+  
+  stones = get_stones(grid[user_input])
+  grid[user_input] = 0
+
+
+  while stones > 0:
+    if user_input != 13:
+      user_input += 1
+    else:
+      user_input = 0 
+
+    if user_input == 13 and stones > 2:
+      grid[user_input] += 1
+      grid[0] += 1
+      user_input = 0
+
+    elif user_input == 13 and stones == 2:
+      grid[user_input] += 1
+      grid[0] += 1
+      print("You scored an extra turn!")
+      take_turn(players[turn])
+
+    elif user_input == 6 and stones > 2:
+      grid[user_input] += 1
+      grid[user_input+1] += 1
+      stones -= 1
+      user_input += 1
+
+    elif user_input == 6 and stones == 2:
+      grid[user_input] += 1
+      grid[7] += 1
+      print("You scored an extra turn!")
+      take_turn(players[turn])
+
+    else:
+      grid[user_input] += 1
+    
+    
+    stones -= 1
+# Get player names
+# players = get_players()
+# turn = 0
+# Game loop
+players = get_players()
+turn = 0 
+# Function to run game.
+def run_game():
+  # Intro
+  print(f'''
+  
+  **** Let's Play Mancala!  ****
+  ''')
+  # Get players
+   
+  # Game loop
+  while True:
+    global turn
+    # Displays board and asks players to make a move.
+    take_turn(players[turn])
+
+    if is_winner(grid, turn):
+      print(f"{players[turn]} Wins!")
+    
+    # Control Player turns
+    if turn == 0:
+      turn += 1
+    else:
+      turn = 0
+
+
+run_game()
