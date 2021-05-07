@@ -1,0 +1,122 @@
+# # Assignment #6
+# # Bowling Game
+
+# # For this assignment, you will create a bowling game that can be played by an unlimited number of players. To create your game, you will need to do the following:
+
+# # Get the number of players from the user.
+# #######
+# # Get the names of each player from the user and add the names to a list (read ahead to Chapter 7 to see how to create a list; we will cover lists in our 3/20 class)
+# #######
+# # Each player will have 10 rounds; each round consists of 2 rolls. On the first roll, the player can knock down anywhere from 0 to 10 pins. If the user knocks down all 10 pins on the first roll, they don't need a second roll. If the user knocks down fewer than 10 pins on the first roll, they have a chance to knock down the remaining pins on the second roll. The score for each roll is determined by how many pins are knocked down. (Hint: You can put this logic into a function and call the function for each player. Use the random library and randint method to determine the number of pins knocked down on the first and second rolls.)
+# # For each round, display the player name, their score for the first roll, and their score for the second roll. Write these 3 pieces of data for each player to a file, as well.
+# # Once all rounds are complete, use the file to calculate and display the total score for each player (Hint: You can create a function where the file is opened/closed, and the total calculated. To calculate the total for a particular player, compare the player name in the file to the player name in the list; if the names match, add the scores that correspond to that player. Use a loop to call the function for each player.)
+# # Sample Output
+
+# # Different number of players: https://drive.google.com/file/d/1Zq_U7cxeYocjbAEfSsmyk4jNkVe00Q8a/view?usp=drivesdk 
+# # Text file generated: https://drive.google.com/file/d/1fxT17OXQZX1FWrO6SAkxtYkXLz6b3TGP/view?usp=drivesdk 
+
+# # # Note: You do not need a main function, I used it to hide the actual code from being seen in the video. Also, as shown in the video, your code should work with any number of players. DO NOT hard code a number of players into your program.
+
+import random
+
+# # Function to open and write the score of each player to a text File. 
+
+def score_record(player, round_1, round_2):
+  '''
+  Function takes player name, and round 1 and 2 scores. 
+  Prints Player name, round_1, round 2
+  opens text file to write the results.
+  '''
+  with open('scorecard.txt', 'a+') as file:
+    file.write(player + '\n')
+    file.write(str(round_1) + '\n')
+    file.write(str(round_2) + '\n')
+
+    file.close()
+
+
+
+# Get number of players
+number_of_players = int(input("Enter number of players: "))
+# List to store player names.
+player_list = []
+# For loop in the range of how many players entered.
+# Add each players name to player_list.
+for i in range(0, number_of_players):
+  player_name = input(f"Enter Player {i+1} name: ")
+  player_list.append(player_name)
+
+print('\n')
+# 10 Rounds loop:
+for i in range(0, 10):
+  print(f'Round {i+1}')
+  for player in player_list:
+    round_1 = random.randint(0,10)
+    round_2 = '/' 
+        
+    if round_1 != 10:
+      diff = 10 - round_1      
+      round_2 = random.randint(0, diff)
+    # Print player/ scores
+    print(player, round_1, round_2)
+    # Use function to write records to text file.
+    score_record(player, round_1, round_2)
+
+  print('\n')
+    
+
+# Getting the total scores for each player.
+
+def get_total_scores(players_list):
+  '''
+  Function to open score.txt file, and get total scores for each player.
+  Returns a dictionary container player name and total score.
+  '''
+  # Players dictionary
+  players = {}
+
+  with open('scorecard.txt', 'r') as file:
+    current_name = ''
+
+    for i in file:
+      name = i.strip()
+      # Check if line is a name in our player list
+      if name in players_list:
+        # Check if name is already in our dictionary
+        if name not in players.keys():
+          players[name] = 0
+        # set current name to player
+        current_name = name
+      # Dealing with scores for current name
+      else:
+        if name == '/':
+          continue
+        else:
+          score = int(name)
+          players[current_name] += score
+    # Close file: 
+    file.close()
+
+  return players
+
+    
+# Storing the return value of get_total_scores() function inside of final_scores.
+final_scores = get_total_scores(player_list)
+
+# Use f string method to print final score sfrom final_scores dictionary.
+print("""
+      Total Scores 
+-----------------------
+""")
+for name in final_scores.keys():
+  print(f"Name: {name}\t Score: {final_scores[name]}")
+
+
+  
+  
+
+
+  
+
+  
+
