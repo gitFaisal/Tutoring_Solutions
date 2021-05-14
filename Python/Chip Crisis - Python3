@@ -1,0 +1,220 @@
+import json
+from recipe_maker import create_recipe
+
+# Create recipe JSON file
+# create_recipe()
+
+# Ask user for the JSON file name
+
+json_file = input("Enter SC Recipe File Name: ")
+
+# Open the JSON file and convert it to a dictionary
+
+with open(json_file) as file:
+  data = json.load(file)
+
+# Classes for Mines and Factories
+class Mine:
+  def __init__(self):
+    self.material = ''
+    self.status = 'inactive'
+
+  def activate(self, material):
+    self.status = 'active'
+    self.material = material
+
+class Factory:
+  def __init__(self):
+    self.type = ''
+    self.status = 'inactive'
+    self.produced = 0
+
+  def activate(self, f_type):
+    self.status = 'active'
+    self.type = f_type
+
+# -------- Functions ---------
+
+def display_mines():
+  '''
+  Displays current mines and their status
+  '''
+  for i in range(0, len(mines)):
+    print(f"Mine {i}")
+    if mines[i].status == 'active':
+      print(f"    {mines[i].material} mine producing {data['raw_materials'][mines[i].material]} per turn")
+    else:
+      print("    Mine is Currently Inactive")
+
+def display_factories():
+  '''
+  Displays current factories and their status
+  '''
+  for i in range(0, len(factories)):
+    print(f"Factory {i}")
+    if factories[i].status == 'active':
+      print(f"    {factories[i].type} mine producing {data['recipes'][factories[i].type]['output_count']} per turn, total production {factories[i].produced}")
+    else:
+      print("    Factory is Currently Inactive")
+
+def display_stockpile():
+  '''
+  Display items generated, with values of more than zero in stock_pile dictionary
+  '''
+  print(":::Current Stockpile:::")
+  for key, val in stock_pile.items():
+    if val != 0:
+      print(f"    {key}: {val}")
+
+
+def display_recipes():
+  '''
+  Displays a list of recipes from our 'data' dictionary
+  '''
+  recipes = data['recipes']
+  print(":::Recipes:::")
+  for key in recipes:
+    print(f"{recipes[key]['output']} - produced in increments of {recipes[key]['output_count']}")
+    print("Required Materials:")
+
+    for key, val in recipes[key]['parts'].items():
+      print(f"    {key}: {val}")
+
+def end_turn():
+  '''
+  Updates stock_pile with material generated from mines for the turn & items made by factories.
+  '''
+  for mine in mines:
+    if mine.status == 'active':
+      stock_pile[mine.material] += data['raw_materials'][mine.material]
+  
+  for factory in factories:
+    if factory.status == 'active':
+      parts_needed = data['recipes'][factory.type]['parts'] # {'iron': 5, 'cog':2}
+      # Function to check if there are enough materials available to make a component/item
+      if enough_materials(parts_needed, stock_pile):
+        # Subtract parts used to make item from stockpile
+        for part in parts_needed:
+          stock_pile[part] -= parts_needed[part]
+        # Add newly made item to stockpile
+        stock_pile[factory.type] += data['recipes'][factory.type]['output_count']
+        factory.produced += 1
+  # Display message + increment turn   
+  print("Mining...")
+  print("Making...")
+  print(f"Turn {turn} Complete")
+
+
+def enough_materials(parts, stock):
+  '''
+  Checks if we have enough parts for a factory to make an item.
+  '''
+  for part in parts.keys():
+    if parts[part] > stock[part]:
+      return False
+  return True
+
+
+def valid_search(string):
+  '''
+  Checks to make sure search is valid, by confirming recipe exists,
+  confirms the material exists,
+  confirms the command string is of the proper length.
+  '''
+  recipes = data['recipes']
+  split_string = string.split()
+
+  if len(split_string) != 7:
+    return False
+  # If string is of proper length get item, part.
+  item = split_string[6]
+  part = split_string[2]
+
+  if item not in recipes:
+    return False
+  elif part not in recipes[item]['parts']:
+    return False
+  else:
+    return [item, part]
+
+def get_material_amount(recipe, material):
+  '''
+  Recursive function takes a recipe and returns the count of material necessary to make the recipe.
+  '''
+  recipes = data['recipes']
+  if recipe == material:
+    return 1
+  if recipe not in recipes:
+    return 0
+  return sum(get_material_amount(i, material) * count for i, count in recipes[recipe]['parts'].items())
+
+
+
+# ----------------------------------
+
+stock_pile = {'iron': 0, 'copper': 0, 'silicon': 0, 'gpu':0, 'ram':0, 'cog':0, 'video_card':0, 'factory':0, 'mine':0}
+# List of current mines, initialized with two inactive mine class objects.
+mines = []
+for i in range(0,2):
+  mine = Mine()
+  mines.append(mine)
+# List of current factories, initialized with two inactive factory class objects.
+factories = []
+for i in range(0,2):
+  factory = Factory()
+  factories.append(factory)
+
+
+game_running = True
+# Initialize turn
+turn = 1
+
+while game_running:
+  user_input = input("Select Next Action: ").lower()
+  # Split user_input into a list
+  split_input = user_input.split()
+  # Activate a mine
+  if split_input[0] == 'set' and split_input[1] == 'mine':
+    index = int(split_input[2])
+    material = split_input[3]
+    mines[index].activate(material)
+  # Activate a factory
+  elif split_input[0] == 'set' and split_input[1] == 'factory':
+    index = int(split_input[2])
+    material = split_input[3]
+    factories[index].activate(material)
+  # Display Mines
+  elif user_input == 'display mines':
+    display_mines()
+  # Display Factories
+  elif user_input == 'display factories':
+    display_factories()
+
+  elif user_input == 'display stockpile':
+    display_stockpile()
+  
+  elif user_input == 'display recipes':
+    display_recipes()
+
+  elif user_input == 'end turn':
+    end_turn()
+    turn += 1
+
+  elif user_input[0:8] == 'how many':
+    if valid_search(user_input):
+      search = valid_search(user_input)
+      recipe = search[0]
+      material = search[1]
+      material_amount = get_material_amount(recipe, material)
+      print(f"There are {material_amount} {material} in a {recipe}")
+    else:
+      print("That is not a valid search")
+
+  else:
+    print("The command was not recognized")
+
+  
+  
+
+  if user_input == 'quit':
+    game_running = False
