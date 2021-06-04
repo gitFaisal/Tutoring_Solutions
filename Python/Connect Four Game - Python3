@@ -43,6 +43,21 @@ def valid_col(column):
         if row[column] != " ":
             taken_rows += 1
     return max_row - taken_rows
+    
+# New Solution for valid_col function above
+#def validColumn(col):
+#   '''
+#   Loops through a given column of our grid, returns coordinate to update if there is available space,
+#   else returns False.
+#   '''
+#   if grid[0][col] != " ":
+#     return "Full"
+
+#   for i in range(5, -1, -1):
+#     if grid[i][col] == " ":
+#       return i
+
+
 
 def make_move(row, column, piece):
     grid[row][column] = piece
