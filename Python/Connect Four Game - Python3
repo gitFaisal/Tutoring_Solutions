@@ -57,6 +57,31 @@ def valid_col(column):
 #     if grid[i][col] == " ":
 #       return i
 
+#def checkDiagonals(player):
+    ''' 
+    New function to add to the winner function that takes the grid and turns it into a np.array() object
+    We then get all the diagonals from our grid and check if the player has won diagonally.
+    '''
+#   np_grid = np.array(grid)
+
+#   diags = [np_grid[::-1,:].diagonal(i) for i in range(-3,4)]
+#   diags.extend(np_grid.diagonal(i) for i in range(3,-4,-1))
+
+#   test_grid = []
+
+#   for i in [n.tolist() for n in diags]:
+#     test_grid.append(i)
+
+#   for i in range(1, len(test_grid)-1):
+#     counter = 0
+#     for e in test_grid[i]:
+#       if e == player:
+#         counter += 1
+#       else:
+#         counter = 0
+
+#       if counter == 4:
+#         return True
 
 
 def make_move(row, column, piece):
