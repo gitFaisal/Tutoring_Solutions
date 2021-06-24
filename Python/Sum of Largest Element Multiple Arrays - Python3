@@ -1,0 +1,54 @@
+PROBLEM: Given 3 lists of numbers, possibly of different lengths, find the largest number in each
+position. For example, In the following 3 lists, the largest number is in bold:
+6, 8, 1, 5, 2, 3, 5, 3, 7, 9
+7, 6, 2, 9
+9, 3, 4, 6, 1, 8, 6, 4, 2, 8, 4
+Print the sum of the largest numbers. In the above example: 9 + 8 + 4 + 9 + 2 + 8 + 6 + 4 + 7 + 9 + 4 = 70
+INPUT: There will be 5 sets of input data. Each set will have 3 lines containing space-separated
+integers.
+OUTPUT: Print the sum of the largest number found in each position in the lists
+
+
+Solutions: 
+# Using a dictionary to solve the problem
+def sum_largest_position(arr1, arr2, arr3):
+  l_dict = {}
+  largest_arr = max(arr1, arr2, arr3)
+
+  for i in range(0, len(largest_arr)):
+    l_dict[i] = largest_arr[i]
+
+  for i in range(0, len(arr1)):
+    if arr1[i] > l_dict[i]:
+      l_dict[i] = arr1[i]
+  for i in range(0, len(arr2)):
+    if arr2[i] > l_dict[i]:
+      l_dict[i] = arr2[i]
+  for i in range(0, len(arr3)):
+    if arr3[i] > l_dict[i]:
+      l_dict[i] = arr3[i]
+
+  print(sum(l_dict.values()))
+  
+# Without a dictionary 
+
+def sum_largest_position(arr1, arr2, arr3):
+  arr_sum = 0
+
+  largest_arr = max(len(arr1), len(arr2), len(arr3))
+  print("Len of largest: ", largest_arr)
+  
+  while len(arr1) < largest_arr:
+    arr1.append(-1)
+  while len(arr2) < largest_arr:
+    arr2.append(-1)
+  while len(arr3) < largest_arr:
+    arr3.append(-1)
+
+  for i in range(0, largest_arr):
+    max_num = max(arr1[i], arr2[i], arr3[i])
+    print(f"Max: {max_num} | Index: {i}")
+    time.sleep(.5)
+    arr_sum += max_num
+  
+  return arr_sum
