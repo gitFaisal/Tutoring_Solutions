@@ -1,0 +1,172 @@
+import random
+
+
+# Function to update storage based on how many runs we want: 
+def getSimulatedStorage(runs, starting_sticks):
+    storage = []  # Where AI stores information
+    game = []  # storage for individual games
+    player = True
+    AI = False
+
+    for i in range(starting_sticks):
+        possible = [1, 2, 3] 
+        storage.append(possible)
+        game.append([])
+
+      # GAME BEGINS
+    while runs > 0:
+        sticks = starting_sticks
+
+        # PLAYERS MAKE MOVES
+        while sticks > 0:
+
+            # PLAYER
+            while player and not sticks < 1:
+                p1_choice = random.choice([1,2,3])
+                if p1_choice < 4:
+                    if p1_choice <= sticks:
+                        player = False
+                        AI = True
+                        sticks -= p1_choice
+                    else:
+                        continue
+                else:
+                    continue
+                  
+            # AI.
+            while AI and not player and not sticks < 1:
+                ai_grab = random.choice(storage[sticks-1])
+                if ai_grab <= sticks:
+                    game[sticks - 1].append(ai_grab)
+                    sticks -= ai_grab
+                    player = True
+                    AI = False
+                else:
+                  continue
+                    
+        # Evaluate if GAME OVER
+        if player:
+            for i in range(len(game)):
+                game[i] = []
+        else:
+            for i in range(len(storage)):
+                storage[i] += game[i]
+                game[i] = []
+        player = True
+        runs -= 1
+    
+    return storage 
+
+
+def getNumber(message):
+  starting_sticks = input(message)
+
+  while True:
+    if starting_sticks.isnumeric():
+      starting_sticks = int(starting_sticks)
+      break 
+    else:
+      print("Invalid entry, please enter a number for sticks.")
+      starting_sticks = input(message)
+  
+  return starting_sticks
+
+
+print('Welcome to the game of sticks!\n')
+
+difficult = input('Would you like to play against Boss level Ai? (yes/no): ').lower()
+
+
+message = 'Please enter number of sticks to start with: '
+starting_sticks = getNumber(message)
+
+
+p1 = input("Hello, please enter your name: \n")
+
+
+
+storage = []  # Where AI stores information
+game = []  # storage for individual games
+play_again = True
+player = True
+AI = False
+
+
+if difficult == 'yes':
+    print("*** BOSS MUSIC ***\n")
+    storage = getSimulatedStorage(10000, starting_sticks)
+    for i in range(starting_sticks):
+        game.append([])
+else:
+    print("*** Novice Begin! ***")
+    for i in range(starting_sticks):
+        possible = [1, 2, 3] 
+        storage.append(possible)
+        game.append([])
+
+# GAME BEGINS
+while play_again:
+
+    print('There are ', starting_sticks, ' sticks on the board.')
+    sticks = starting_sticks
+
+    # PLAYERS MAKE MOVES
+    while sticks > 0:
+
+        # PLAYER
+        while player and not sticks < 1:
+            message = 'How many sticks do you take (1-3)? '
+            p1_choice = getNumber(message)
+            if p1_choice < 4:
+                if p1_choice <= sticks:
+                    player = False
+                    AI = True
+                    sticks -= p1_choice
+                else:
+                    print("Try again, there aren't that many sticks remaining.")
+            else:
+                print("Try again, that number is too big.")
+
+            if sticks > 0:
+                print('There are ', sticks, ' on the board.')
+              
+        # AI.
+        while AI and not player and not sticks < 1:
+            ai_grab = random.choice(storage[sticks-1])
+            if ai_grab <= sticks:
+                game[sticks - 1].append(ai_grab)
+                print("game: ", game)            
+                print('AI selects: ', ai_grab)
+                sticks -= ai_grab
+                player = True
+                AI = False
+            else:
+              continue
+            # Need to fix case where ai picks more than allowed
+            if sticks > 0:
+                print('There are ', sticks, ' on the board.')
+                
+
+    # Evaluate if GAME OVER
+    if player:
+        print("Congrats" , p1, "you won!") 
+        for i in range(len(game)):
+            game[i] = []
+    else:
+        print("Sorry", p1, "you lost.")
+        for i in range(len(storage)):
+            storage[i] += game[i]
+            game[i] = []
+      
+
+    repeat = input("Would you like to play again? yes or no ")
+    if repeat == "yes":
+        player = True
+        play_again = True
+    else:
+        break
+
+
+
+
+
