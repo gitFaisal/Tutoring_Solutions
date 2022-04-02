@@ -1,0 +1,222 @@
+import random
+from deck_data import deck
+import os
+
+# ----------------- CLASSES -----------------
+class Deck:
+  def __init__(self, cards):
+    self.cards = cards
+
+  def shuffle(self):
+    random.shuffle(self.cards)
+
+  def card_count(self):
+    return len(self.cards)
+
+  def draw(self):
+    random_card = random.choice(self.cards)
+    self.cards.remove(random_card)
+    return random_card
+
+  def draw_middle(self):
+    while True:
+      random_card = random.choice(self.cards)
+      split_card = random_card.split()
+
+      if split_card[0].isnumeric():
+        self.cards.remove(random_card)
+        return random_card 
+      
+class Player:
+  def __init__(self, name):
+    self.name = name
+    self.cards = []
+
+  def draw_cards(self, deck, num_cards):
+    for i in range(0, num_cards):
+      self.cards.append(deck.draw())
+
+  def hasCards(self):
+    if len(self.cards) == 0:
+      return False
+    else:
+      return True
+  def create_card(self, card, selector):
+    return f' {selector}: [ {card} ]'
+    
+  def display_cards(self):
+    count = 0
+    display_string = ''
+    for i in range(len(self.cards)):
+      if count == 5:
+        display_string += self.create_card(self.cards[i], i) + '\n'
+        count = 0
+      else:
+        display_string += self.create_card(self.cards[i], i)
+        count += 1
+    print(f'\nPlayer: {self.name}            Cards: {len(self.cards)}')
+    print(display_string)
+
+  def valid_move(self, card, middle_card):
+    ''' MIDDLE CARD MUST ALWAYS BE ABLE TO SPLIT'''
+    split_middle = middle_card.split()
+    middle_value = split_middle[0]
+    middle_color = split_middle[1]
+    
+    card_split = card.split()
+    
+    if len(card_split) == 1:
+      return True
+    # Assuming we can split
+    elif len(card_split) == 2:
+      card_value = card_split[0]
+      card_color = card_split[1]
+
+      if middle_color == card_color:
+        return True
+      elif middle_value == card_value:
+        return True
+      else:
+        return False
+      
+  def play_card(self, middle_card):
+    self.display_cards()
+    print("Enter D to draw a card: ")
+    while True:
+      move = input("Enter number of card to play: ").upper()
+
+      if move == 'D':
+        self.draw_cards(deck, 1)
+        return
+
+      if not move.isnumeric() or len(self.cards)-1 < int(move):
+        print('Invalid entry, enter integers in range only!')
+        continue
+      card = self.cards[int(move)]
+      if self.valid_move(card, middle_card.card):
+        middle_card.update_card(card)
+        self.cards.remove(card)
+        # Add each card played to the middle_card_sink
+        middle_card_sink.append(card)
+        # If Deck has 5 or less cards, combine deck + sink
+        if deck.card_count() <= 5:
+          combine_deck_sink(deck, middle_card_sink)
+        
+        return card
+      else:
+        print("Invalid card, try again!")
+      
+class Middle:
+  def __init__(self, card):
+    self.card = card
+
+  def display(self):
+    print(f'''
+---------------------------------------------  
+     ****     Current Card: {self.card}     ****
+---------------------------------------------  
+    ''')
+
+  def update_card(self, new_card):
+    split_card = new_card.split()
+    
+    if len(split_card) == 1:
+      valid_values = ['B', 'G', 'Y', 'R']
+      while True:
+        value = input("Enter special card color (B, G, Y, or R): ").upper()
+
+        if value in valid_values:
+          self.card = "SP " + value
+          return
+        else:
+          print("Please enter a valid value for special card!")
+      
+    self.card = new_card 
+# ----------------- HELPER FUNCTIONS -----------------
+def clear_screen():
+    os.system("cls" if os.name == 'nt' else "clear")
+
+def combine_deck_sink(deck, sink):
+  for i in range(len(sink)):
+    card = random.choice(sink)
+    # Adds card to start of deck list '0' for 0 index
+    deck.insert(0, card)
+    # remove card from sink, after adding to deck
+    sink.remove(card)
+    
+
+def get_draw_count(card):
+  '''Returns number of cards to draw'''
+  return int(card[1])
+
+def isWinner(player):
+  if player.hasCards():
+    return False
+  else:
+    return True
+
+def play_move(player, opponent):
+  middle_card.display()
+  move = player.play_card(middle_card)
+  # If the play_card method returns a special card, players get to go again
+  if move and move.split()[0] in special_cards:
+    middle_card.display()
+    move = player.play_card(middle_card)
+    # If the second card is also a special card, player gets another turn
+    if move.split()[0] in special_cards:
+      middle_card.display()
+      move = player.play_card(middle_card)
+    elif move[0] == '+':
+      cards = get_draw_count(move)
+      opponent.draw_cards(deck, cards)
+      # This is the max amount of moves allowed for turn
+  elif move and move[0] == '+':
+    cards = get_draw_count(move)
+    opponent.draw_cards(deck, cards)
+    
+  clear_screen()
+  input("\nPress any key to continue...")
+
+
+# ----------------- SETUP -----------------
+# Make a Deck class object using deck data imported from deck_data.py
+deck = Deck(deck)
+# Shuffle deck
+deck.shuffle()
+# Get player names
+p1 = input('Please enter player one name: ')
+p2 = input('Please enter player two name: ')
+# Use class to build each player object
+player_one = Player(p1)
+player_two = Player(p2)
+# Each player draws cards 
+player_one.draw_cards(deck, 7)
+player_two.draw_cards(deck, 7)
+# Set Middle Card
+middle_card = Middle(deck.draw_middle())
+
+special_cards = ['Rv', 'Sk']
+middle_card_sink = []
+
+while True:
+#            player       opponent (player one's move)
+  play_move(player_one, player_two)
+# Check for winner
+  if isWinner(player_one):
+    print('\n UNO!!!!!')
+    print(f'{p1} has won!!!')
+    break
+#            player       opponent (player two's move)
+  play_move(player_two, player_one)
+
+  if isWinner(player_two):
+    print('\n UNO!!!!!')
+    print(f'{p2} has won!!!')
+    break
+
+    
+
+  
+
+  
+
